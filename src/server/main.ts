@@ -1,0 +1,109 @@
+import "dotenv/config";
+import express from "express";
+import ViteExpress from "vite-express";
+import {
+  addEvent,
+  addEventSlots,
+  addAttendee,
+  addAttendeeSlots,
+  getEvent,
+  getEvents,
+} from "./dbConnection.js";
+
+const app = express();
+
+app.get("/api/events", async (req, res) => {
+  const events = await getEvents();
+  res.send(events);
+});
+
+app.get("/api/event/:id", async (req, res) => {
+  const event = await getEvent(req.params.id);
+  res.send(event);
+});
+
+// Create new event
+app.post("/api/event", async (req, res) => {
+  const newId = await addEvent(req.body.name, req.body.timezone);
+  res.send({ id: newId });
+});
+
+// Update existing event
+app.post("/api/event/:id/", async (req, res) => {
+  // Error handling!
+  if (req.body.slots) {
+    await addEventSlots(req.params.id, req.body.timezone);
+  }
+  if (req.body.timezone) {
+    // TODO
+  }
+  if (req.body.name) {
+    // TODO
+  }
+  res.send();
+});
+
+// Create new attendee
+app.post("/api/attendee", async (req, res) => {
+  const newId = await addAttendee(
+    req.body.event_id,
+    req.body.name,
+    req.body.timezone
+  );
+  res.send({ id: newId });
+});
+
+// Update existing attendee
+app.post("/api/attendee/:id", async (req, res) => {
+  // Error handling!
+  if (req.body.slots) {
+    await addAttendeeSlots(req.body.event_id, req.params.id, req.body.timezone);
+  }
+  res.send();
+});
+
+app.get("/api/test-all", async (req, res) => {
+  const newEventId = await addEvent("Microscope Session", "Europe/London");
+
+  if (newEventId === null) {
+    console.log("Failed to create new event");
+    return;
+  }
+
+  const newEventSlots = ["2020-02-23T05:00:00Z", "2020-02-23T05:30:00Z"];
+
+  await addEventSlots(newEventId, newEventSlots);
+
+  const attendeeOneId = await addAttendee(
+    newEventId,
+    "Galadriel",
+    "Europe/Paris"
+  );
+  if (attendeeOneId === null) {
+    console.log("Failed to create new attendee");
+    return;
+  }
+
+  const attendeeOneSlots = ["2020-02-23T05:00:00Z"];
+  await addAttendeeSlots(newEventId, attendeeOneId, attendeeOneSlots);
+
+  const attendeeTwoId = await addAttendee(
+    newEventId,
+    "Elrond",
+    "Europe/Rivendell"
+  );
+  if (attendeeTwoId === null) {
+    console.log("Failed to create new attendee");
+    return;
+  }
+
+  const attendeeTwoSlots = ["2020-02-23T05:00:00Z"];
+  await addAttendeeSlots(newEventId, attendeeTwoId, attendeeTwoSlots);
+
+  const newEvent = await getEvent(newEventId);
+  res.send(newEvent);
+});
+
+ViteExpress.listen(app, 3000, () =>
+  console.log("Server is listening on port 3000...")
+);
