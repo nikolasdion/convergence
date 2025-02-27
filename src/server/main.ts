@@ -12,12 +12,12 @@ import {
 
 const app = express();
 
-app.get("/api/events", async (req, res) => {
+app.get("/api/events", async (req, res, next) => {
   const events = await getEvents();
   res.send(events);
 });
 
-app.get("/api/event/:id", async (req, res) => {
+app.get("/api/event/:id", async (req, res, next) => {
   const event = await getEvent(req.params.id);
   res.send(event);
 });
@@ -25,11 +25,11 @@ app.get("/api/event/:id", async (req, res) => {
 // Create new event
 app.post("/api/event", async (req, res) => {
   const newId = await addEvent(req.body.name, req.body.timezone);
-  res.send({ id: newId });
+  res.send(newId);
 });
 
 // Update existing event
-app.post("/api/event/:id/", async (req, res) => {
+app.post("/api/event/:id/", async (req, res, next) => {
   // Error handling!
   if (req.body.slots) {
     await addEventSlots(req.params.id, req.body.timezone);
@@ -40,41 +40,46 @@ app.post("/api/event/:id/", async (req, res) => {
   if (req.body.name) {
     // TODO
   }
-  res.send();
+  res.send("OK");
 });
 
 // Create new attendee
-app.post("/api/attendee", async (req, res) => {
+app.post("/api/attendee", async (req, res, next) => {
   const newId = await addAttendee(
     req.body.event_id,
     req.body.name,
     req.body.timezone
   );
-  res.send({ id: newId });
+  res.send(newId);
 });
 
 // Update existing attendee
-app.post("/api/attendee/:id", async (req, res) => {
-  // Error handling!
+app.post("/api/attendee/:id", async (req, res, next) => {
   if (req.body.slots) {
     await addAttendeeSlots(req.body.event_id, req.params.id, req.body.timezone);
   }
-  res.send();
+  // TODO updating other parts
+  res.send("OK");
 });
 
-app.get("/api/test-all", async (req, res) => {
-  const newEventId = await addEvent("Microscope Session", "Europe/London");
+app.get("/api/test-all", async (req, res, next) => {
+  const { id: newEventId } = await addEvent(
+    "Microscope Session",
+    "Europe/London"
+  );
 
   if (newEventId === null) {
     console.log("Failed to create new event");
     return;
   }
 
+  console.log(newEventId);
+
   const newEventSlots = ["2020-02-23T05:00:00Z", "2020-02-23T05:30:00Z"];
 
   await addEventSlots(newEventId, newEventSlots);
 
-  const attendeeOneId = await addAttendee(
+  const { id: attendeeOneId } = await addAttendee(
     newEventId,
     "Galadriel",
     "Europe/Paris"
@@ -87,7 +92,7 @@ app.get("/api/test-all", async (req, res) => {
   const attendeeOneSlots = ["2020-02-23T05:00:00Z"];
   await addAttendeeSlots(newEventId, attendeeOneId, attendeeOneSlots);
 
-  const attendeeTwoId = await addAttendee(
+  const { id: attendeeTwoId } = await addAttendee(
     newEventId,
     "Elrond",
     "Europe/Rivendell"

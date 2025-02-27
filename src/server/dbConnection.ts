@@ -22,8 +22,8 @@ async function query<T>(query: string): Promise<T[]> {
     poolConnection.close();
     return result.recordset as T[];
   } catch (err: any) {
-    console.error(err.message);
-    return [];
+    console.error(`Query ${query} failed with message: ${err.message}`);
+    throw err;
   }
 }
 
@@ -43,14 +43,14 @@ export async function getEvents(): Promise<IEvent[]> {
   return events;
 }
 
-export async function getEvent(event_id: string): Promise<IEvent | null> {
+export async function getEvent(event_id: string): Promise<IEvent> {
   const dbEvents = await query<DbEvent>(
     `SELECT * from event WHERE id='${event_id}'`
   );
 
   if (!dbEvents[0]) {
     console.log(`Event not found with id ${event_id}`);
-    return null;
+    throw new Error(`Event not found with id ${event_id}`);
   }
 
   const dbEventSlots = await getEventSlots(event_id);
@@ -86,7 +86,7 @@ export async function addAttendee(
   event_id: string,
   name: string,
   timezone: string
-): Promise<string | null> {
+): Promise<{ id: string }> {
   const queryString = `
     DECLARE @TempTable TABLE(id UNIQUEIDENTIFIER);
         INSERT INTO attendee (name, timezone, event_id)
@@ -95,18 +95,24 @@ export async function addAttendee(
 
     SELECT id FROM @TempTable;
     `;
-  const returnedTable = await query<{ id: string }[]>(queryString);
+  const returnedTable = await query<{ id: string }>(queryString);
 
-  if (returnedTable.length === 0) return null;
+  if (returnedTable.length === 0) {
+    console.log(
+      `New attendee '${name}' for ${event_id} possibly not created, server doesn't return an ID`
+    );
+    throw new Error(
+      `New attendee '${name}' for ${event_id} possibly not created, server doesn't return an ID`
+    );
+  }
 
-  //@ts-ignore TS being weird
-  return returnedTable[0].id;
+  return returnedTable[0];
 }
 
 export async function addEvent(
   name: string,
   timezone: string
-): Promise<string | null> {
+): Promise<{ id: string }> {
   const queryString = `
     DECLARE @TempTable TABLE(id UNIQUEIDENTIFIER);
         INSERT INTO event (name, timezone)
@@ -116,11 +122,17 @@ export async function addEvent(
     SELECT id FROM @TempTable;
     `;
 
-  const returnedTable = await query<{ id: string }[]>(queryString);
+  const returnedTable = await query<{ id: string }>(queryString);
 
-  if (returnedTable.length === 0) return null;
+  if (returnedTable.length === 0) {
+    console.log(
+      `New event '${name}' possibly not created, server doesn't return an ID`
+    );
+    throw new Error(
+      `New event '${name}' possibly not created, server doesn't return an ID`
+    );
+  }
 
-  //@ts-ignore TS being weird
   return returnedTable[0];
 }
 
