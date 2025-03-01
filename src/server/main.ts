@@ -8,6 +8,7 @@ import {
   addAttendeeSlots,
   getEvent,
   getEvents,
+  deleteEvent,
 } from "./dbConnection.js";
 
 const app = express();
@@ -18,15 +19,16 @@ app.get("/api/events", async (req, res, next) => {
   res.send(events);
 });
 
-app.get("/api/event/:id", async (req, res, next) => {
-  const event = await getEvent(req.params.id);
-  res.send(event);
-});
-
 // Create new event
 app.post("/api/event", async (req, res) => {
   const newId = await addEvent(req.body.name, req.body.timezone);
   res.send(newId);
+});
+
+// get specific event
+app.get("/api/event/:id", async (req, res, next) => {
+  const event = await getEvent(req.params.id);
+  res.send(event);
 });
 
 // Update existing event
@@ -42,6 +44,11 @@ app.post("/api/event/:id/", async (req, res, next) => {
     // TODO
   }
   res.send("OK");
+});
+
+app.delete("/api/event/:id", async (req, res, next) => {
+  await deleteEvent(req.params.id);
+  res.send(`Deleted event ${req.params.id}`);
 });
 
 // Create new attendee

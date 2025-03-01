@@ -27,6 +27,23 @@ async function singleQuery<T>(query: string): Promise<T[]> {
   }
 }
 
+async function multiQuery<T>(queries: string[]): Promise<T[][]> {
+  try {
+    const poolConnection = await sql.connect(config);
+    const results = await Promise.all(
+      queries.map(async (query): Promise<T[]> => {
+        const result = await poolConnection.request().query(query);
+        return result.recordset as T[];
+      })
+    );
+    poolConnection.close();
+    return results;
+  } catch (err: any) {
+    console.error(`Queries ${queries} failed with message: ${err.message}`);
+    throw err;
+  }
+}
+
 async function getEventSlots(event_id: string) {
   return await singleQuery<DbEventSlot>(
     `SELECT * from event_slot WHERE event_id='${event_id}'`
@@ -169,4 +186,14 @@ export async function addAttendeeSlots(
         VALUES ('${event_id}', '${attendee_id}', '${slot}')`
   );
   await singleQuery<any>(queryStrings.join(`\n`));
+}
+
+export async function deleteEvent(event_id: string) {
+  const queryStrings = [
+    `DELETE FROM event WHERE id='${event_id}'`,
+    `DELETE FROM event_slot WHERE event_id='${event_id}'`,
+    `DELETE FROM attendee WHERE event_id='${event_id}'`,
+    `DELETE FROM attendee_slot WHERE event_id='${event_id}'`,
+  ];
+  multiQuery(queryStrings);
 }

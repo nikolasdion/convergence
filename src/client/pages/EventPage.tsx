@@ -15,12 +15,7 @@ const EventPage: React.FC = () => {
     });
   }, []);
 
-  return (
-    <div className="App">
-      <h1>Convergence</h1>
-      {JSON.stringify(event)}
-    </div>
-  );
+  return <div className="w-fit m-auto">{JSON.stringify(event)}</div>;
 };
 
 export default EventPage;
