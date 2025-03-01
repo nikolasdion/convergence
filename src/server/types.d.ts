@@ -24,7 +24,7 @@ interface DbAttendeeSlot {
 interface IEvent {
   id: string;
   name: string;
-  timezone: string;
+  timezone?: string;
   slots: string[];
   attendees: Attendee[];
 }
@@ -33,5 +33,5 @@ interface Attendee {
   id: string;
   name: string;
   slots: string[];
-  timezone: string;
+  timezone?: string;
 }

@@ -74,7 +74,9 @@ export async function getEvent(event_id: string): Promise<IEvent> {
 
   const { recordset: dbEventSlots } = await poolConnection
     .request()
-    .query(`SELECT * from event_slot WHERE event_id='${event_id}'`);
+    .query(
+      `SELECT * from event_slot WHERE event_id='${event_id}' ORDER BY slot`
+    );
 
   const { recordset: dbAttendees } = await poolConnection
     .request()
@@ -85,7 +87,7 @@ export async function getEvent(event_id: string): Promise<IEvent> {
       const { recordset: dbAttendeeSlots } = await poolConnection
         .request()
         .query(
-          `SELECT * FROM attendee_slot WHERE event_id='${event_id}' AND attendee_id='${dbAttendee.id}'`
+          `SELECT * FROM attendee_slot WHERE event_id='${event_id}' AND attendee_id='${dbAttendee.id}' ORDER BY slot`
         );
 
       return {
@@ -195,5 +197,5 @@ export async function deleteEvent(event_id: string) {
     `DELETE FROM attendee WHERE event_id='${event_id}'`,
     `DELETE FROM attendee_slot WHERE event_id='${event_id}'`,
   ];
-  multiQuery(queryStrings);
+  singleQuery<any>(queryStrings.join(`\n`));
 }

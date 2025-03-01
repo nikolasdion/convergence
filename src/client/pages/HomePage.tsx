@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Button, Listbox, ListboxItem } from "@heroui/react";
-import { Link } from "react-router";
-import DarkModeSwitch from "../DarkModeSwitch";
+import { Listbox, ListboxItem, Spinner } from "@heroui/react";
 
 const HomePage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState<IEvent[]>([]);
 
   useEffect(() => {
@@ -11,22 +10,16 @@ const HomePage: React.FC = () => {
   }, []);
 
   const fetchEvents = async () => {
+    setIsLoading(true);
     const res = await fetch("/api/events");
-    if (res !== null && res.status === 200) {
+    if (res?.ok) {
       setEvents((await res.json()) as IEvent[]);
     }
+    setIsLoading(false);
   };
 
   const renderEvents = () => {
     return events.map((event, index) => {
-      const onPressDelete = (e) => {
-        // e.preventDefault();
-        fetch(`/api/event/${event.id}`, { method: "DELETE" }).then(
-          async (res) => {
-            fetchEvents();
-          }
-        );
-      };
       return (
         <ListboxItem
           key={index}
@@ -34,21 +27,18 @@ const HomePage: React.FC = () => {
           href={`/event/${event.id}`}
         >
           {event.name}
-          {/* <Button size="sm" onPress={onPressDelete}>
-            Delete
-          </Button> */}
         </ListboxItem>
       );
     });
   };
 
   return (
-    <div className="w-fit m-auto">
+    <div className=" max-w-7xl m-auto">
       <div className="my-4">
         <h1 className="text-xl">Events list</h1>
       </div>
-      <div className="w-full max-w-[260px] border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100">
-        <Listbox aria-label="Actions">{renderEvents()}</Listbox>
+      <div className="w-full max-w-96 min-w-52 border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100 flex flex-row justify-center">
+        {isLoading ? <Spinner /> : <Listbox>{renderEvents()}</Listbox>}
       </div>
     </div>
   );

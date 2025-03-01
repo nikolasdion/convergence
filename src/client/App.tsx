@@ -4,7 +4,7 @@ import { Route, Routes, useNavigate, useHref } from "react-router";
 import { HeroUIProvider } from "@heroui/react";
 import HomePage from "./pages/HomePage";
 import EventPage from "./pages/EventPage";
-import ConvergenceNavbar from "./Navbar";
+import Navbar from "./Navbar";
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -17,7 +17,7 @@ function App() {
 
   return (
     <HeroUIProvider navigate={navigate} useHref={useHref}>
-      <ConvergenceNavbar />
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/event/:id" element={<EventPage />} />

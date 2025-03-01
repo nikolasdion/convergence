@@ -52,7 +52,7 @@ const DarkModeSwitch: React.FC = () => {
 
   return (
     <Button
-      variant="bordered"
+      variant="ghost"
       color="default"
       isIconOnly
       onPress={onChange}

@@ -83,7 +83,7 @@ app.get("/api/test-all", async (req, res, next) => {
 
   console.log(newEventId);
 
-  const newEventSlots = ["2020-02-23T05:00:00Z", "2020-02-23T05:30:00Z"];
+  const newEventSlots = ["2024-02-23T05:00:00Z", "2024-02-23T05:30:00Z"];
 
   await addEventSlots(newEventId, newEventSlots);
 
@@ -97,7 +97,7 @@ app.get("/api/test-all", async (req, res, next) => {
     return;
   }
 
-  const attendeeOneSlots = ["2020-02-23T05:00:00Z"];
+  const attendeeOneSlots = ["2024-02-23T05:00:00Z"];
   await addAttendeeSlots(newEventId, attendeeOneId, attendeeOneSlots);
 
   const { id: attendeeTwoId } = await addAttendee(
@@ -110,7 +110,7 @@ app.get("/api/test-all", async (req, res, next) => {
     return;
   }
 
-  const attendeeTwoSlots = ["2020-02-23T05:00:00Z"];
+  const attendeeTwoSlots = ["2024-02-23T05:00:00Z"];
   await addAttendeeSlots(newEventId, attendeeTwoId, attendeeTwoSlots);
 
   const newEvent = await getEvent(newEventId);

@@ -4,13 +4,13 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
 } from "@heroui/react";
 import DarkModeSwitch from "./DarkModeSwitch";
+import { getLocalTimeZone } from "@internationalized/date";
 
 const ConvergenceNavbar: React.FC = () => {
   return (
-    <Navbar>
+    <Navbar className="bg-primary-100 bg-opacity-50">
       <NavbarBrand>
         <p className="font-bold text-inherit">Convergence</p>
       </NavbarBrand>
@@ -22,6 +22,7 @@ const ConvergenceNavbar: React.FC = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
+        <NavbarItem>Timezone: {getLocalTimeZone()}</NavbarItem>
         <NavbarItem>
           <DarkModeSwitch />
         </NavbarItem>
