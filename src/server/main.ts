@@ -13,6 +13,7 @@ import {
 const app = express();
 
 app.get("/api/events", async (req, res, next) => {
+  console.log("/api/events");
   const events = await getEvents();
   res.send(events);
 });

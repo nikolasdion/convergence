@@ -15,7 +15,7 @@ const config: sql.config = {
   },
 };
 
-async function query<T>(query: string): Promise<T[]> {
+async function singleQuery<T>(query: string): Promise<T[]> {
   try {
     const poolConnection = await sql.connect(config);
     const result = await poolConnection.request().query(query);
@@ -28,13 +28,13 @@ async function query<T>(query: string): Promise<T[]> {
 }
 
 async function getEventSlots(event_id: string) {
-  return await query<DbEventSlot>(
+  return await singleQuery<DbEventSlot>(
     `SELECT * from event_slot WHERE event_id='${event_id}'`
   );
 }
 
 export async function getEvents(): Promise<IEvent[]> {
-  const dbEvents = await query<DbEvent>(`SELECT * from event`);
+  const dbEvents = await singleQuery<DbEvent>(`SELECT * from event`);
   const events = await Promise.all(
     dbEvents.map((e) => {
       return { ...e, slots: [] as string[], attendees: [] as Attendee[] };
@@ -44,22 +44,33 @@ export async function getEvents(): Promise<IEvent[]> {
 }
 
 export async function getEvent(event_id: string): Promise<IEvent> {
-  const dbEvents = await query<DbEvent>(
-    `SELECT * from event WHERE id='${event_id}'`
-  );
+  const poolConnection = await sql.connect(config);
+
+  const { recordset: dbEvents } = await poolConnection
+    .request()
+    .query(`SELECT * from event WHERE id='${event_id}'`);
 
   if (!dbEvents[0]) {
     console.log(`Event not found with id ${event_id}`);
     throw new Error(`Event not found with id ${event_id}`);
   }
 
-  const dbEventSlots = await getEventSlots(event_id);
-  const slots = dbEventSlots.map((e) => e.slot);
+  const { recordset: dbEventSlots } = await poolConnection
+    .request()
+    .query(`SELECT * from event_slot WHERE event_id='${event_id}'`);
 
-  const dbAttendees = await getAttendees(event_id);
+  const { recordset: dbAttendees } = await poolConnection
+    .request()
+    .query(`SELECT * FROM attendee WHERE event_id='${event_id}'`);
+
   const attendees = await Promise.all(
     dbAttendees.map(async (dbAttendee): Promise<Attendee> => {
-      const dbAttendeeSlots = await getAttendeeSlots(event_id, dbAttendee.id);
+      const { recordset: dbAttendeeSlots } = await poolConnection
+        .request()
+        .query(
+          `SELECT * FROM attendee_slot WHERE event_id='${event_id}' AND attendee_id='${dbAttendee.id}'`
+        );
+
       return {
         ...dbAttendee,
         slots: dbAttendeeSlots.map((s) => s.slot),
@@ -67,17 +78,19 @@ export async function getEvent(event_id: string): Promise<IEvent> {
     })
   );
 
-  return { ...dbEvents[0], slots, attendees };
+  poolConnection.close();
+
+  return { ...dbEvents[0], slots: dbEventSlots.map((e) => e.slot), attendees };
 }
 
 async function getAttendees(event_id: string) {
-  return await query<DbAttendee>(
+  return await singleQuery<DbAttendee>(
     `SELECT * FROM attendee WHERE event_id='${event_id}'`
   );
 }
 
 async function getAttendeeSlots(event_id: string, attendee_id: string) {
-  return await query<DbAttendeeSlot>(
+  return await singleQuery<DbAttendeeSlot>(
     `SELECT * FROM attendee_slot WHERE event_id='${event_id}' AND attendee_id='${attendee_id}'`
   );
 }
@@ -95,7 +108,7 @@ export async function addAttendee(
 
     SELECT id FROM @TempTable;
     `;
-  const returnedTable = await query<{ id: string }>(queryString);
+  const returnedTable = await singleQuery<{ id: string }>(queryString);
 
   if (returnedTable.length === 0) {
     console.log(
@@ -122,7 +135,7 @@ export async function addEvent(
     SELECT id FROM @TempTable;
     `;
 
-  const returnedTable = await query<{ id: string }>(queryString);
+  const returnedTable = await singleQuery<{ id: string }>(queryString);
 
   if (returnedTable.length === 0) {
     console.log(
@@ -142,7 +155,7 @@ export async function addEventSlots(event_id: string, slots: string[]) {
         INSERT INTO event_slot (event_id, slot)
         VALUES ('${event_id}', '${slot}')`
   );
-  await query<any>(queryStrings.join("\n"));
+  await singleQuery<any>(queryStrings.join("\n"));
 }
 
 export async function addAttendeeSlots(
@@ -155,5 +168,5 @@ export async function addAttendeeSlots(
         INSERT INTO attendee_slot (event_id, attendee_id, slot)
         VALUES ('${event_id}', '${attendee_id}', '${slot}')`
   );
-  await query<any>(queryStrings.join(`\n`));
+  await singleQuery<any>(queryStrings.join(`\n`));
 }
