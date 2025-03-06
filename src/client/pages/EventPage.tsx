@@ -1,16 +1,19 @@
-import { Button, Calendar } from "@heroui/react";
-import {
-  parseAbsoluteToLocal,
-  getLocalTimeZone,
-} from "@internationalized/date";
-import { parse } from "path";
+import { Button, Code } from "@heroui/react";
+import { getLocalTimeZone } from "@internationalized/date";
 import { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router";
+import SlotInputs from "../components/SlotInputs";
+import {
+  convertToDateTimeSlot,
+  convertToStrSlot,
+  DateTimeSlot,
+} from "../lib/dateTime";
 
 const EventPage: React.FC = () => {
   const { id } = useParams();
   const [event, setEvent] = useState<EventWithId>();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,26 +32,29 @@ const EventPage: React.FC = () => {
     navigate(`/`);
   };
 
-  const renderSlots = (slots: Slot[]) => {
-    return slots.map((slot) => {
-      return (
-        <div>
-          <p>Start: {slot.start}</p>
-          <p>End: {slot.end}</p>
-          <Calendar isReadOnly value={parseAbsoluteToLocal(slot.start)} />
-        </div>
-      );
-    });
+  const renderSlots = () => {
+    return (
+      <SlotInputs
+        slots={event ? event.slots.map(convertToDateTimeSlot) : []}
+        onSlotsChange={(slots) =>
+          setEvent({
+            ...event,
+            slots: slots.map(convertToStrSlot),
+          } as EventWithId)
+        }
+      />
+    );
   };
 
   return (
     <div className="w-fit m-auto flex flex-col">
+      <h1>{event?.name}</h1>
       <div>Timezone: {getLocalTimeZone()}</div>
       <Button color="danger" variant="ghost" onPress={onPressDelete}>
         Delete Event
       </Button>
-      {JSON.stringify(event, undefined, 2)}
-      {renderSlots(event?.slots ?? [])}
+      <Code>{`${JSON.stringify(event, undefined, 2)}`}</Code>
+      {renderSlots()}
     </div>
   );
 };

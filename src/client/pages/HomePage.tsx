@@ -40,7 +40,14 @@ const HomePage: React.FC = () => {
         <h1 className="text-xl">Events list</h1>
       </div>
       <div className="w-full max-w-96 min-w-52 border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100 flex flex-row justify-center">
-        {isLoading ? <Spinner /> : <Listbox>{renderEvents()}</Listbox>}
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <Listbox>
+            <ListboxItem href={`/event/new`}>Create New Event</ListboxItem>
+            <>{renderEvents()}</>
+          </Listbox>
+        )}
       </div>
     </div>
   );

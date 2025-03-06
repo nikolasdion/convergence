@@ -1,15 +1,14 @@
 import "dotenv/config";
 import express from "express";
+import { ObjectId } from "mongodb";
 import ViteExpress from "vite-express";
 import {
-  getEvent,
-  getEvents,
   createEvent,
   deleteEvent,
+  getEvent,
+  getEvents,
   updateEvent,
 } from "./db/dbConnection.js";
-import { ObjectId } from "mongodb";
-import { i } from "framer-motion/client";
 import { mockEvent1 } from "./mockData.js";
 
 const app = express();
@@ -21,10 +20,9 @@ app.get("/api/events", async (req, res, next) => {
 });
 
 // Create new event
-app.post("/api/events/new", async (req, res) => {
-  console.log("POST /api/events/new");
-
-  const newId = await createEvent(req.body.name, req.body.timezone);
+app.post("/api/events/", async (req, res) => {
+  console.log("POST /api/events/");
+  const newId = await createEvent(req.body);
   res.send({ id: newId });
 });
 
@@ -49,15 +47,16 @@ app.delete("/api/events/:id", async (req, res, next) => {
   res.send(`Deleted event ${req.params.id}`);
 });
 
+// TEST APIS
 app.get("/api/test/add", async (req, res, next) => {
   console.log("GET /api/test/add");
   const newIds: string[] = [];
   for (const i of [1, 2, 3, 4, 5]) {
     const event = {
       ...mockEvent1,
-      name: `${mockEvent1?.name} + ${Math.random()}`,
+      name: `${mockEvent1?.name} ${Math.random()}`,
     };
-    const newId = await createEvent(event.name, event.timezone);
+    const newId = await createEvent(event);
     await updateEvent(newId, event);
     newIds.push(newId);
   }
@@ -67,10 +66,12 @@ app.get("/api/test/add", async (req, res, next) => {
 app.get("/api/test/all", async (req, res, next) => {
   console.log("GET /api/test/all");
 
-  const newEventId = await createEvent(
-    "Microscope Session " + Math.random(),
-    "Europe/London"
-  );
+  const newEventId = await createEvent({
+    name: "Microscope Session " + Math.random(),
+    timezone: "Europe/London",
+    slots: [],
+    attendees: [],
+  });
 
   if (newEventId === null) {
     console.log("Failed to create new event");
