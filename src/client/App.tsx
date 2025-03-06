@@ -1,10 +1,11 @@
 import type { NavigateOptions } from "react-router";
 
 import { Route, Routes, useNavigate, useHref } from "react-router";
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, Spinner } from "@heroui/react";
 import HomePage from "./pages/HomePage";
 import EventPage from "./pages/EventPage";
 import Navbar from "./Navbar";
+import ErrorBoundary from "./ErrorBoundary";
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -17,11 +18,13 @@ function App() {
 
   return (
     <HeroUIProvider navigate={navigate} useHref={useHref}>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/event/:id" element={<EventPage />} />
-      </Routes>
+      <ErrorBoundary>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/event/:id" element={<EventPage />} />
+        </Routes>
+      </ErrorBoundary>
     </HeroUIProvider>
   );
 }

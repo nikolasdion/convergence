@@ -3,7 +3,7 @@ import { Listbox, ListboxItem, Spinner } from "@heroui/react";
 
 const HomePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [events, setEvents] = useState<IEvent[]>([]);
+  const [events, setEvents] = useState<EventWithId[]>([]);
 
   useEffect(() => {
     fetchEvents();
@@ -13,7 +13,9 @@ const HomePage: React.FC = () => {
     setIsLoading(true);
     const res = await fetch("/api/events");
     if (res?.ok) {
-      setEvents((await res.json()) as IEvent[]);
+      setEvents((await res.json()) as EventWithId[]);
+    } else {
+      throw new Error(JSON.stringify(res));
     }
     setIsLoading(false);
   };
@@ -23,8 +25,8 @@ const HomePage: React.FC = () => {
       return (
         <ListboxItem
           key={index}
-          description={event.id}
-          href={`/event/${event.id}`}
+          description={event._id}
+          href={`/event/${event._id}`}
         >
           {event.name}
         </ListboxItem>

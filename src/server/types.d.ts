@@ -1,37 +1,26 @@
-interface DbEvent {
-  id: string;
-  name: string;
-  timezone: string;
-}
-
-interface DbEventSlot {
-  event_id: string;
-  slot: string;
-}
-
-interface DbAttendee {
-  id: string;
-  name: string;
-  timezone: string;
-}
-
-interface DbAttendeeSlot {
-  attendee_id: string;
-  event_id: string;
-  slot: string;
-}
-
-interface IEvent {
-  id: string;
-  name: string;
+interface EventWithoutId {
+  name?: string;
   timezone?: string;
-  slots: string[];
+  slots: Slot[];
   attendees: Attendee[];
 }
 
+interface EventWithId extends EventWithoutId {
+  _id: string;
+}
+
 interface Attendee {
-  id: string;
-  name: string;
-  slots: string[];
+  _id: string;
+  name?: string;
+  slots: Slot[];
   timezone?: string;
+}
+
+interface Slot {
+  start: string;
+  end: string;
+}
+
+interface CreateResult {
+  id: string;
 }

@@ -1,4 +1,4 @@
-import { Button, Switch } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useTheme } from "@heroui/use-theme";
 
 interface IconProps {

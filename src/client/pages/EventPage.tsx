@@ -3,13 +3,14 @@ import {
   parseAbsoluteToLocal,
   getLocalTimeZone,
 } from "@internationalized/date";
+import { parse } from "path";
 import { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router";
 
 const EventPage: React.FC = () => {
   const { id } = useParams();
-  const [event, setEvent] = useState<IEvent>();
+  const [event, setEvent] = useState<EventWithId>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,23 +18,24 @@ const EventPage: React.FC = () => {
   }, []);
 
   const fetchEvent = async () => {
-    const res = await fetch(`/api/event/${id}`);
+    const res = await fetch(`/api/events/${id}`);
     if (res?.ok) {
-      setEvent((await res.json()) as IEvent);
+      setEvent((await res.json()) as EventWithId);
     }
   };
 
   const onPressDelete = async () => {
-    await fetch(`/api/event/${id}`, { method: "DELETE" });
+    await fetch(`/api/events/${id}`, { method: "DELETE" });
     navigate(`/`);
   };
 
-  const renderSlots = (slots: string[]) => {
+  const renderSlots = (slots: Slot[]) => {
     return slots.map((slot) => {
       return (
         <div>
-          <p>{slot}</p>
-          <Calendar isReadOnly value={parseAbsoluteToLocal(slot)} />
+          <p>Start: {slot.start}</p>
+          <p>End: {slot.end}</p>
+          <Calendar isReadOnly value={parseAbsoluteToLocal(slot.start)} />
         </div>
       );
     });
@@ -45,7 +47,7 @@ const EventPage: React.FC = () => {
       <Button color="danger" variant="ghost" onPress={onPressDelete}>
         Delete Event
       </Button>
-      {JSON.stringify(event)}
+      {JSON.stringify(event, undefined, 2)}
       {renderSlots(event?.slots ?? [])}
     </div>
   );
