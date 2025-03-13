@@ -12,6 +12,7 @@ import {
 import { mockEvent1 } from "./mockData.js";
 
 const app = express();
+app.use(express.json());
 
 app.get("/api/events", async (req, res, next) => {
   console.log("GET /api/events");
@@ -22,6 +23,7 @@ app.get("/api/events", async (req, res, next) => {
 // Create new event
 app.post("/api/events/", async (req, res) => {
   console.log("POST /api/events/");
+  console.log(req.body);
   const newId = await createEvent(req.body);
   res.send({ id: newId });
 });

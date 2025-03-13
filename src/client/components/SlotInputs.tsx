@@ -39,10 +39,18 @@ const SlotInputs: React.FC<Props> = ({
 
   const renderSlots = () => {
     return slots.map((slot, index) => {
-      const onChange = (newSlot: DateTimeSlot) => {
+      const onChange = (newSlot?: DateTimeSlot) => {
         const newSlots = [...slots];
-        newSlots[index] = newSlot;
-        onSlotsChange(newSlots);
+
+        if (!newSlot) {
+          // remove slot
+          newSlots.splice(index, 1);
+          onSlotsChange(newSlots);
+        } else {
+          // change slot
+          newSlots[index] = newSlot;
+          onSlotsChange(newSlots);
+        }
       };
 
       return (
@@ -50,16 +58,18 @@ const SlotInputs: React.FC<Props> = ({
           key={index}
           readOnly={readOnly}
           slot={slot}
-          onSlotChange={(newSlot) => onChange(newSlot)}
+          onSlotChange={onChange}
         />
       );
     });
   };
 
   return (
-    <div className="w-fit flex-row flex-wrap">
+    <div className="w-fit flex-row flex-wrap p-2">
       {renderSlots()}
-      <Button onPress={addNewSlot}>Add new slot</Button>
+      <Button className="w-auto" variant="ghost" onPress={addNewSlot}>
+        Add new slot
+      </Button>
     </div>
   );
 };

@@ -46,15 +46,23 @@ const EventPage: React.FC = () => {
     );
   };
 
+  const renderJson = () => (
+    <Code className="text-wrap text-gray-600 text-xs mt-3 absolute bottom-5 ">{`${JSON.stringify(
+      event,
+      undefined,
+      2
+    )}`}</Code>
+  );
+
   return (
-    <div className="w-fit m-auto flex flex-col">
-      <h1>{event?.name}</h1>
+    <div className="w-auto max-w-5xl m-auto flex flex-col">
+      <h1 className="text-3xl">{event?.name}</h1>
       <div>Timezone: {getLocalTimeZone()}</div>
       <Button color="danger" variant="ghost" onPress={onPressDelete}>
         Delete Event
       </Button>
-      <Code>{`${JSON.stringify(event, undefined, 2)}`}</Code>
       {renderSlots()}
+      {renderJson()}
     </div>
   );
 };
