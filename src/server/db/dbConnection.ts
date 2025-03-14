@@ -47,6 +47,7 @@ export async function updateEvent(
   id: string,
   event: EventWithoutId
 ): Promise<void> {
+  console.log(event);
   try {
     const mongoClient = await client.connect();
     const result = await mongoClient

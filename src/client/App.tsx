@@ -1,10 +1,10 @@
 import type { NavigateOptions } from "react-router";
 
 import { Route, Routes, useNavigate, useHref } from "react-router";
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import HomePage from "./pages/HomePage";
 import EventPage from "./pages/EventPage";
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 import ErrorBoundary from "./ErrorBoundary";
 import NewEventPage from "./pages/NewEventPage";
 import { getHeroUiLocale } from "./lib/locale";
@@ -24,6 +24,7 @@ function App() {
       useHref={useHref}
       locale={getHeroUiLocale()}
     >
+      <ToastProvider />
       <ErrorBoundary>
         <Navbar />
         <Routes>

@@ -35,7 +35,6 @@ const NewEventPage: React.FC = () => {
         "Content-Type": "application/json",
       },
     });
-    console.log(res);
     if (res?.ok) {
       const id = (await res.json()).id as string;
       return id;

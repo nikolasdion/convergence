@@ -1,6 +1,7 @@
 import { Button, DatePicker } from "@heroui/react";
 import { DateTimeSlot } from "../lib/dateTime";
 import { ZonedDateTime } from "@internationalized/date";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   slot: DateTimeSlot;
@@ -27,14 +28,15 @@ const SlotInput: React.FC<Props> = ({
     onSlotChange();
   };
   return (
-    <div className="flex flex-row gap-x-2 py-2">
+    <div className="flex flex-row gap-x-2 my-2 px-2 py-1 rounded-md bg-default-300 bg-opacity-50">
       <DatePicker
         isReadOnly={readOnly}
         hideTimeZone
         showMonthAndYearPickers
         value={slot.start}
         onChange={onStartChange}
-        label="Start"
+        label="From"
+        labelPlacement="outside-left"
       />
       <DatePicker
         isReadOnly={readOnly}
@@ -42,15 +44,22 @@ const SlotInput: React.FC<Props> = ({
         showMonthAndYearPickers
         value={slot.end}
         onChange={onEndChange}
-        label="End"
+        label="To"
+        labelPlacement="outside-left"
       />
-      <Button
-        title="Remove slot"
-        className="text-5xl h-auto"
-        onPress={onRemoveButtonClick}
-      >
-        x
-      </Button>
+      {!readOnly ? (
+        <Button
+          title="Remove slot"
+          onPress={onRemoveButtonClick}
+          isIconOnly
+          // color="danger"
+          variant="light"
+        >
+          <XMarkIcon />
+        </Button>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
