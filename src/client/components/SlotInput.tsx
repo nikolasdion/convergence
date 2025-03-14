@@ -54,6 +54,7 @@ const SlotInput: React.FC<Props> = ({
           isIconOnly
           // color="danger"
           variant="light"
+          className="p-2"
         >
           <XMarkIcon />
         </Button>

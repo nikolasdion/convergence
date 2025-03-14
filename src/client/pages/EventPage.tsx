@@ -5,11 +5,8 @@ import { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router";
 import SlotInputs from "../components/SlotInputs";
-import {
-  convertToDateTimeSlot,
-  convertToStrSlot,
-  DateTimeSlot,
-} from "../lib/dateTime";
+import { convertToDateTimeSlot, convertToStrSlot } from "../lib/dateTime";
+import AttendeeList from "../components/AttendeeList";
 
 const EventPage: React.FC = () => {
   const { id } = useParams();
@@ -124,6 +121,12 @@ const EventPage: React.FC = () => {
       </div>
 
       {renderSlots()}
+      <AttendeeList
+        attendees={event?.attendees ?? []}
+        onAttendeesChange={(attendees) => {
+          setEvent({ ...event, attendees } as EventWithId);
+        }}
+      />
       {renderJson()}
     </div>
   );
