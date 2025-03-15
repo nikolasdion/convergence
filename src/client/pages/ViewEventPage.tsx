@@ -2,14 +2,17 @@ import { addToast, Button, Code } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { deleteEvent, fetchEvent } from "../lib/data";
-import SlotsPreview from "../components/SlotsPreview";
 import PageTitle from "../components/PageTitle";
 import EventPreview from "../components/EventPreview";
 import AttendeesPreview from "../components/AttendeesPreview";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const ViewEventPage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
   const { id } = useParams();
+
   const [event, setEvent] = useState<EventWithoutId>({
     name: "",
     slots: [],
@@ -17,26 +20,23 @@ const ViewEventPage: React.FC = () => {
   });
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
     if (!id) {
       addToast({ title: "Cannot fetch event: no ID supplied" });
       return;
     }
 
-    const event = await fetchEvent(id);
-
-    if (!event) {
-      addToast({ title: "Failed to fetch event" });
-      return;
-    }
-
-    // @ts-ignore
-    delete event._id;
-    setEvent(event);
-  };
+    fetchEvent(id)
+      .then(async (event) => {
+        // @ts-ignore
+        delete event._id;
+        setEvent(event);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        addToast({ title: "Failed to fetch event" });
+        return;
+      });
+  }, []);
 
   const onEditPress = () => {
     navigate(`/event/${id}/edit`);
@@ -46,32 +46,23 @@ const ViewEventPage: React.FC = () => {
     navigate(`/event/${id}/attend`);
   };
 
-  const renderAttendees = () => {
-    return event.attendees.map((attendee) => {
-      return (
-        <div key={attendee._id}>
-          <h3>{attendee.name}</h3>
-          <h4>Slots</h4>
-          <SlotsPreview slots={attendee.slots} />
-        </div>
-      );
-    });
-  };
-
   const onDelete = async () => {
     if (!id) {
       addToast({ title: "Cannot delete event: no ID supplied" });
       return;
     }
-    const success = await deleteEvent(id);
-    if (success) {
+    try {
+      await deleteEvent(id);
       addToast({ title: "Event deleted" });
       navigate(`/`);
-    } else {
+    } catch {
       addToast({ title: "Failed to delete event. Please try again." });
     }
   };
 
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
   return (
     <>
       <div className="flex flex-row align-middle gap-2 items-center justify-between">

@@ -4,8 +4,11 @@ import EventForm from "../components/EventForm";
 import { deleteEvent, fetchEvent, updateEvent } from "../lib/data";
 import { addToast, Button } from "@heroui/react";
 import PageTitle from "../components/PageTitle";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const EditEventPage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [event, setEvent] = useState<EventWithoutId>({
@@ -15,26 +18,23 @@ const EditEventPage: React.FC = () => {
   });
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
     if (!id) {
       addToast({ title: "Cannot fetch event: no ID supplied" });
       return;
     }
 
-    const event = await fetchEvent(id);
-
-    if (!event) {
-      addToast({ title: "Failed to fetch event" });
-      return;
-    }
-
-    // @ts-ignore
-    delete event._id;
-    setEvent(event);
-  };
+    fetchEvent(id)
+      .then(async (event) => {
+        // @ts-ignore
+        delete event._id;
+        setEvent(event);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        addToast({ title: "Failed to fetch event" });
+        return;
+      });
+  }, []);
 
   const onSubmit = async () => {
     if (!id) {
@@ -42,11 +42,11 @@ const EditEventPage: React.FC = () => {
       return;
     }
 
-    const success = await updateEvent(id, event);
-    if (success) {
+    try {
+      await updateEvent(id, event);
       addToast({ title: "Event updated" });
       navigate(`/event/${id}/view`);
-    } else {
+    } catch {
       addToast({ title: "Failed to update event. Please try again." });
     }
   };
@@ -56,15 +56,18 @@ const EditEventPage: React.FC = () => {
       addToast({ title: "Cannot delete event: no ID supplied" });
       return;
     }
-    const success = await deleteEvent(id);
-    if (success) {
+    try {
+      await deleteEvent(id);
       addToast({ title: "Event deleted" });
       navigate(`/`);
-    } else {
+    } catch {
       addToast({ title: "Failed to delete event. Please try again." });
     }
   };
 
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
   return (
     <>
       <PageTitle>Edit Event</PageTitle>

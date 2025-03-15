@@ -1,24 +1,22 @@
-export const fetchEvent = async (id: string): Promise<EventWithId | null> => {
+export const fetchEvent = async (id: string): Promise<EventWithId> => {
   const res = await fetch(`/api/event/${id}`);
   if (res?.ok) {
     return (await res.json()) as EventWithId;
   } else {
-    return null;
+    throw new Error("Failed to fetch event");
   }
 };
 
-export const fetchEvents = async (): Promise<EventWithId[]> => {
+export const fetchAllEvents = async (): Promise<EventWithId[]> => {
   const res = await fetch(`/api/event/all`);
   if (res?.ok) {
     return (await res.json()) as EventWithId[];
   } else {
-    return [] as EventWithId[];
+    throw new Error("Failed to fetch events");
   }
 };
 
-export const createEvent = async (
-  event: EventWithoutId
-): Promise<string | undefined> => {
+export const createEvent = async (event: EventWithoutId): Promise<string> => {
   const res = await fetch(`/api/event/`, {
     method: "POST",
     body: JSON.stringify(event),
@@ -30,14 +28,14 @@ export const createEvent = async (
     const id = (await res.json()).id as string;
     return id;
   } else {
-    return undefined;
+    throw new Error("Failed to create event");
   }
 };
 
 export const createAttendee = async (
   eventId: string,
   attendee: AttendeeWithoutId
-): Promise<string | undefined> => {
+): Promise<string> => {
   const res = await fetch(`/api/event/${eventId}/attendee/`, {
     method: "POST",
     body: JSON.stringify(attendee),
@@ -49,14 +47,14 @@ export const createAttendee = async (
     const id = (await res.json()).id as string;
     return id;
   } else {
-    return undefined;
+    throw new Error("Failed to create attendee");
   }
 };
 
 export const updateEvent = async (
   id: string,
   event: EventWithoutId
-): Promise<boolean> => {
+): Promise<void> => {
   const res = await fetch(`/api/event/${id}`, {
     method: "POST",
     body: JSON.stringify(event),
@@ -64,13 +62,17 @@ export const updateEvent = async (
       "Content-Type": "application/json",
     },
   });
-  return res?.ok;
+  if (res?.ok) {
+    return;
+  } else {
+    throw new Error("Failed to update event");
+  }
 };
 
 export const updateAttendee = async (
   eventId: string,
   attendee: AttendeeWithId
-): Promise<boolean> => {
+): Promise<void> => {
   const res = await fetch(`/api/event/${eventId}/${attendee._id}`, {
     method: "POST",
     body: JSON.stringify(attendee),
@@ -78,22 +80,34 @@ export const updateAttendee = async (
       "Content-Type": "application/json",
     },
   });
-  return res?.ok;
+  if (res?.ok) {
+    return;
+  } else {
+    throw new Error("Failed to update event");
+  }
 };
 
-export const deleteEvent = async (id: string): Promise<boolean> => {
+export const deleteEvent = async (id: string): Promise<void> => {
   const res = await fetch(`/api/event/${id}`, {
     method: "DELETE",
   });
-  return res?.ok;
+  if (res?.ok) {
+    return;
+  } else {
+    throw new Error("Failed to update event");
+  }
 };
 
 export const deleteAttendee = async (
   eventId: string,
   attendeeId: string
-): Promise<boolean> => {
+): Promise<void> => {
   const res = await fetch(`/api/event/${eventId}/attendee/${attendeeId}`, {
     method: "DELETE",
   });
-  return res?.ok;
+  if (res?.ok) {
+    return;
+  } else {
+    throw new Error("Failed to update event");
+  }
 };
