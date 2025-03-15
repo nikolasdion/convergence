@@ -67,9 +67,11 @@ const SlotInputs: React.FC<Props> = ({
   return (
     <div className="w-fit flex-row flex-wrap p-2">
       {renderSlots()}
-      <Button className="w-auto" variant="ghost" onPress={addNewSlot}>
-        Add new slot
-      </Button>
+      {!readOnly && (
+        <Button className="w-auto" variant="ghost" onPress={addNewSlot}>
+          Add new slot
+        </Button>
+      )}
     </div>
   );
 };

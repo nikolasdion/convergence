@@ -127,7 +127,7 @@ const EventPage: React.FC = () => {
           setEvent({ ...event, attendees } as EventWithId);
         }}
       />
-      {renderJson()}
+      {/* {renderJson()} */}
     </div>
   );
 };
