@@ -11,7 +11,7 @@ const HomePage: React.FC = () => {
 
   const fetchEvents = async () => {
     setIsLoading(true);
-    const res = await fetch("/api/events");
+    const res = await fetch("/api/event/all");
     if (res?.ok) {
       setEvents((await res.json()) as EventWithId[]);
     } else {

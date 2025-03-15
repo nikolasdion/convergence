@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express from "express";
+import express, { RequestHandler } from "express";
 import { ObjectId } from "mongodb";
 import ViteExpress from "vite-express";
 import {
@@ -11,47 +11,62 @@ import {
 } from "./db/dbConnection.js";
 import { mockEvent1 } from "./mockData.js";
 
+const loggerMiddleware: RequestHandler = (req, _res, next) => {
+  const url = req.url;
+  if (url.startsWith("/api")) {
+    console.log(`${req.method} ${url}`);
+  }
+  next();
+};
+
 const app = express();
 app.use(express.json());
+app.use(loggerMiddleware);
 
-app.get("/api/events", async (req, res, next) => {
-  console.log("GET /api/events");
+// MISC APIS
+app.get("/api/event/all", async (req, res, next) => {
   const events = await getEvents();
   res.send(events);
 });
 
-// Create new event
-app.post("/api/events/", async (req, res) => {
-  console.log("POST /api/events/");
-  console.log(req.body);
+// EVENT API - CRUD
+app.post("/api/event/", async (req, res) => {
   const newId = await createEvent(req.body);
   res.send({ id: newId });
 });
-
-// Read specific event
-app.get("/api/events/:id", async (req, res, next) => {
-  console.log("GET /api/events/" + req.params.id);
+app.get("/api/event/:id", async (req, res) => {
   const event = await getEvent(req.params.id);
   res.send(event);
 });
-
-// Update existing event
-app.post("/api/events/:id", async (req, res, next) => {
-  console.log("POST /api/events/" + req.params.id);
+app.post("/api/event/:id", async (req, res) => {
   await updateEvent(req.params.id, req.body);
   res.send("Updated event");
 });
-
-// Delete existing event
-app.delete("/api/events/:id", async (req, res, next) => {
-  console.log("DELETE /api/events/" + req.params.id);
+app.delete("/api/event/:id", async (req, res) => {
   await deleteEvent(req.params.id);
+  res.send(`Deleted event ${req.params.id}`);
+});
+
+// ATTENDEE API - CRUD
+app.post("/api/event/:id/attendee", async (req, res) => {
+  // await deleteEvent(req.params.id);
+  res.send(`Deleted event ${req.params.id}`);
+});
+app.get("/api/event/:id/attendee/:attId", async (req, res) => {
+  // await deleteEvent(req.params.id);
+  res.send(`Deleted event ${req.params.id}`);
+});
+app.post("/api/event/:id/attendee/:attId", async (req, res) => {
+  // await deleteEvent(req.params.id);
+  res.send(`Deleted event ${req.params.id}`);
+});
+app.delete("/api/event/:id/attendee/:attId", async (req, res) => {
+  // await deleteEvent(req.params.id);
   res.send(`Deleted event ${req.params.id}`);
 });
 
 // TEST APIS
 app.get("/api/test/add", async (req, res, next) => {
-  console.log("GET /api/test/add");
   const newIds: string[] = [];
   for (const i of [1, 2, 3, 4, 5]) {
     const event = {
@@ -66,8 +81,6 @@ app.get("/api/test/add", async (req, res, next) => {
 });
 
 app.get("/api/test/all", async (req, res, next) => {
-  console.log("GET /api/test/all");
-
   const newEventId = await createEvent({
     name: "Microscope Session " + Math.random(),
     timezone: "Europe/London",

@@ -19,7 +19,7 @@ const EventPage: React.FC = () => {
   }, []);
 
   const fetchEvent = async () => {
-    const res = await fetch(`/api/events/${id}`);
+    const res = await fetch(`/api/event/${id}`);
     if (res?.ok) {
       setEvent((await res.json()) as EventWithId);
     } else {
@@ -31,7 +31,7 @@ const EventPage: React.FC = () => {
   };
 
   const onPressDelete = async () => {
-    const res = await fetch(`/api/events/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/event/${id}`, { method: "DELETE" });
     if (res?.ok) {
       addToast({ title: "Successfully deleted event", color: "success" });
       navigate(`/`);
@@ -69,7 +69,7 @@ const EventPage: React.FC = () => {
     delete eventWithoutId._id;
     console.log(eventWithoutId);
 
-    const res = await fetch(`/api/events/${id}`, {
+    const res = await fetch(`/api/event/${id}`, {
       method: "POST",
       body: JSON.stringify(eventWithoutId),
       headers: {

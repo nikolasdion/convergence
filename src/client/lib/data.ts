@@ -8,7 +8,7 @@ export const fetchEvent = async (id: string): Promise<EventWithId | null> => {
 };
 
 export const fetchEvents = async (): Promise<EventWithId[]> => {
-  const res = await fetch(`/api/events/`);
+  const res = await fetch(`/api/event/`);
   if (res?.ok) {
     return (await res.json()) as EventWithId[];
   } else {

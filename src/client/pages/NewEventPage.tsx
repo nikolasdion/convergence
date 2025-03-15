@@ -28,7 +28,7 @@ const NewEventPage: React.FC = () => {
       slots,
       attendees: [],
     };
-    const res = await fetch(`/api/events/`, {
+    const res = await fetch(`/api/event/`, {
       method: "POST",
       body: JSON.stringify(event),
       headers: {
