@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Listbox, ListboxItem, Spinner } from "@heroui/react";
+import PageTitle from "../components/PageTitle";
 
 const HomePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +27,7 @@ const HomePage: React.FC = () => {
         <ListboxItem
           key={index}
           description={event._id}
-          href={`/event/${event._id}`}
+          href={`/event/${event._id}/view/`}
         >
           {event.name}
         </ListboxItem>
@@ -36,9 +37,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className=" max-w-7xl m-auto">
-      <div className="my-4">
-        <h1 className="text-xl">Events list</h1>
-      </div>
+      <PageTitle>Events list</PageTitle>
       <div className="w-full max-w-96 min-w-52 border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100 flex flex-row justify-center">
         {isLoading ? (
           <Spinner />

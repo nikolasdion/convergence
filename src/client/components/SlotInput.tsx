@@ -29,7 +29,7 @@ const SlotInput: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-row gap-x-2 my-2 px-2 py-1 rounded-md bg-default-300 bg-opacity-50">
+    <div className="flex flex-row gap-x-2 my-2 px-2 py-1">
       {readOnly ? (
         <span>
           From {formatDate(slot.start)} to {formatDate(slot.end)}

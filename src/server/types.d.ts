@@ -1,19 +1,24 @@
 interface EventWithoutId {
-  name?: string;
+  name: string;
+  description?: string;
   timezone?: string;
   slots: Slot[];
-  attendees: Attendee[];
+  attendees: AttendeeWithId[];
 }
 
 interface EventWithId extends EventWithoutId {
   _id: string;
 }
 
-interface Attendee {
-  _id: string;
-  name?: string;
+interface AttendeeWithoutId {
+  name: string;
   slots: Slot[];
   timezone?: string;
+  comment?: string;
+}
+
+interface AttendeeWithId extends AttendeeWithoutId {
+  _id: string;
 }
 
 interface Slot {

@@ -1,15 +1,6 @@
-import { Button, Calendar, DatePicker, Form, Input } from "@heroui/react";
-import {
-  parseAbsoluteToLocal,
-  getLocalTimeZone,
-  toTimeZone,
-  ZonedDateTime,
-  now,
-} from "@internationalized/date";
-import e from "express";
-import { useEffect, useState } from "react";
+import { Button } from "@heroui/react";
+import { getLocalTimeZone, now } from "@internationalized/date";
 
-import { useNavigate, useParams } from "react-router";
 import SlotInput from "./SlotInput";
 import { DateTimeSlot } from "../lib/dateTime";
 
@@ -65,7 +56,7 @@ const SlotInputs: React.FC<Props> = ({
   };
 
   return (
-    <div className="w-fit flex-row flex-wrap p-2">
+    <div className="">
       {renderSlots()}
       {!readOnly && (
         <Button className="w-auto" variant="ghost" onPress={addNewSlot}>

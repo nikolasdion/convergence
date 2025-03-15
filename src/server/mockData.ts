@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { nanoid } from "nanoid";
 
 export const mockEvent1: EventWithoutId = {
   name: "The Fellowship",
@@ -11,9 +11,8 @@ export const mockEvent1: EventWithoutId = {
   ],
   attendees: [
     {
-      _id: new ObjectId().toHexString(),
+      _id: nanoid(8),
       name: "Aragorn",
-      timezone: "Asia/Jakarta",
       slots: [
         {
           start: "2025-05-23T18:00:00Z",
@@ -34,9 +33,8 @@ export const mockEvent1: EventWithoutId = {
       ],
     },
     {
-      _id: new ObjectId().toHexString(),
+      _id: nanoid(8),
       name: "Gandalf",
-      timezone: "Asia/Singapore",
       slots: [
         {
           start: "2025-05-23T18:00:00Z",
@@ -51,11 +49,14 @@ export const mockEvent1: EventWithoutId = {
           end: "2025-05-26T20:00:00Z",
         },
       ],
+      comment:
+        "A wizard is never late. Nor is he early; he arrives precisely when he means to.",
     },
     {
-      _id: new ObjectId().toHexString(),
+      _id: nanoid(8),
       name: "Galadriel",
       timezone: "Europe/Paris",
+      comment: "Can't make it, busy turning photonegative",
       slots: [],
     },
   ],
