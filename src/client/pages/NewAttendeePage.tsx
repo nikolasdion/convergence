@@ -9,7 +9,6 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 const NewAttendeePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-
   const navigate = useNavigate();
   const { id } = useParams();
   const [event, setEvent] = useState<EventWithoutId>({

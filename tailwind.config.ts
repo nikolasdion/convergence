@@ -12,4 +12,5 @@ export default {
   },
   darkMode: "class",
   plugins: [heroui()],
+  jit: true,
 } satisfies Config;
