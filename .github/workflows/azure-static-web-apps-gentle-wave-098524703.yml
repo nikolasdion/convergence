@@ -22,8 +22,6 @@ jobs:
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
-        env:
-          RUN_BUILD_COMMAND: "VITE_API_URI=${{env.VITE_API_URI}} npm run build"
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GENTLE_WAVE_098524703 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
@@ -34,6 +32,7 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+          app_build_command: "VITE_API_URI=${{env.VITE_API_URI}} npm run build"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
