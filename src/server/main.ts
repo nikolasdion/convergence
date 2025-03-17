@@ -13,7 +13,21 @@ import {
   updateEvent,
 } from "./db/dbConnection.js";
 import { mockEvent1 } from "./mockData.js";
-import { nanoid } from "nanoid";
+
+const getPort = () => normalizePort(process.env.PORT, 3000);
+
+function normalizePort(value: string | undefined, defaultPort: number): number {
+  if (value === undefined) {
+    return defaultPort;
+  }
+  var port = parseInt(value, 10);
+
+  if (isNaN(port) || port < 0) {
+    return defaultPort;
+  }
+
+  return port;
+}
 
 const loggerMiddleware: RequestHandler = (req, _res, next) => {
   const url = req.url;
@@ -164,6 +178,6 @@ app.get("/api/test/delete-all", async (req, res) => {
   res.send("DELETED ALL EVENTS");
 });
 
-ViteExpress.listen(app, 3000, () =>
-  console.log("Server is listening on port 3000...")
+ViteExpress.listen(app, getPort(), () =>
+  console.log(`Server is listening on port ${getPort()}...`)
 );
