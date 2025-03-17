@@ -1,7 +1,7 @@
 import { Button } from "@heroui/react";
 import { getLocalTimeZone, now } from "@internationalized/date";
 
-import SlotInput from "./SlotInput";
+import SlotInput from "./SlotInput.js";
 import { DateTimeSlot } from "../lib/dateTime";
 
 interface Props {

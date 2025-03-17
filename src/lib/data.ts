@@ -1,5 +1,11 @@
+const API_URI = import.meta.env.VITE_API_URI;
+
+const fetchWithApi = async (path: string, init?: RequestInit) => {
+  return await fetch(`${API_URI}${path}`, init);
+};
+
 export const fetchEvent = async (id: string): Promise<EventWithId> => {
-  const res = await fetch(`/api/event/${id}`);
+  const res = await fetchWithApi(`/event/${id}`);
   if (res?.ok) {
     return (await res.json()) as EventWithId;
   } else {
@@ -8,7 +14,7 @@ export const fetchEvent = async (id: string): Promise<EventWithId> => {
 };
 
 export const fetchAllEvents = async (): Promise<EventWithId[]> => {
-  const res = await fetch(`/api/event/all`);
+  const res = await fetchWithApi(`/event/all`);
   if (res?.ok) {
     return (await res.json()) as EventWithId[];
   } else {
@@ -17,7 +23,7 @@ export const fetchAllEvents = async (): Promise<EventWithId[]> => {
 };
 
 export const createEvent = async (event: EventWithoutId): Promise<string> => {
-  const res = await fetch(`/api/event/`, {
+  const res = await fetchWithApi(`/event/`, {
     method: "POST",
     body: JSON.stringify(event),
     headers: {
@@ -36,7 +42,7 @@ export const createAttendee = async (
   eventId: string,
   attendee: AttendeeWithoutId
 ): Promise<string> => {
-  const res = await fetch(`/api/event/${eventId}/attendee/`, {
+  const res = await fetchWithApi(`/event/${eventId}/attendee/`, {
     method: "POST",
     body: JSON.stringify(attendee),
     headers: {
@@ -55,7 +61,7 @@ export const updateEvent = async (
   id: string,
   event: EventWithoutId
 ): Promise<void> => {
-  const res = await fetch(`/api/event/${id}`, {
+  const res = await fetchWithApi(`/event/${id}`, {
     method: "POST",
     body: JSON.stringify(event),
     headers: {
@@ -73,7 +79,7 @@ export const updateAttendee = async (
   eventId: string,
   attendee: AttendeeWithId
 ): Promise<void> => {
-  const res = await fetch(`/api/event/${eventId}/${attendee._id}`, {
+  const res = await fetchWithApi(`/event/${eventId}/${attendee._id}`, {
     method: "POST",
     body: JSON.stringify(attendee),
     headers: {
@@ -88,7 +94,7 @@ export const updateAttendee = async (
 };
 
 export const deleteEvent = async (id: string): Promise<void> => {
-  const res = await fetch(`/api/event/${id}`, {
+  const res = await fetchWithApi(`/event/${id}`, {
     method: "DELETE",
   });
   if (res?.ok) {
@@ -102,7 +108,7 @@ export const deleteAttendee = async (
   eventId: string,
   attendeeId: string
 ): Promise<void> => {
-  const res = await fetch(`/api/event/${eventId}/attendee/${attendeeId}`, {
+  const res = await fetchWithApi(`/event/${eventId}/attendee/${attendeeId}`, {
     method: "DELETE",
   });
   if (res?.ok) {

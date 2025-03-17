@@ -5,7 +5,7 @@ import {
   NavbarItem,
   Link,
 } from "@heroui/react";
-import DarkModeSwitch from "./DarkModeSwitch";
+import DarkModeSwitch from "./DarkModeSwitch.js";
 import { getLocalTimeZone } from "@internationalized/date";
 
 import Icon from "../assets/icon.svg";

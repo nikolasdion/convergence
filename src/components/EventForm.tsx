@@ -1,19 +1,15 @@
 import { Button, Form, Input, Textarea } from "@heroui/react";
-import SlotInputs from "../components/SlotInputs";
+import SlotInputs from "./SlotInputs.js";
 import { convertToDateTimeSlot, convertToStrSlot } from "../lib/dateTime";
 import { useNavigate } from "react-router";
 
 interface Props {
-  attendee: AttendeeWithoutId;
-  onAttendeeChange: (event: AttendeeWithoutId) => void;
+  event: EventWithoutId;
+  onEventChange: (event: EventWithoutId) => void;
   onSubmit: () => void;
 }
 
-const AttendeeForm: React.FC<Props> = ({
-  attendee,
-  onAttendeeChange: onEventChange,
-  onSubmit,
-}) => {
+const EventForm: React.FC<Props> = ({ event, onEventChange, onSubmit }) => {
   const navigate = useNavigate();
   const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,33 +26,38 @@ const AttendeeForm: React.FC<Props> = ({
       <div className="bg-default-50 rounded-lg p-2 w-full my-2">
         <Input
           isRequired
+          errorMessage=""
           label="Name"
-          placeholder="Enter the attendee name"
+          name="name"
+          placeholder="Enter the event name"
+          labelPlacement="outside"
           type="text"
-          value={attendee.name}
-          onChange={(e) => onEventChange({ ...attendee, name: e.target.value })}
+          value={event.name}
+          onChange={(e) => onEventChange({ ...event, name: e.target.value })}
         />
         <Textarea
-          label="Comment (optional)"
-          placeholder="Anything to add?"
-          value={attendee.comment}
+          errorMessage=""
+          label="Description"
+          name="name"
+          placeholder="(Optional) Enter event description"
+          value={event.description}
+          labelPlacement="outside"
           onChange={(e) =>
-            onEventChange({ ...attendee, comment: e.target.value })
+            onEventChange({ ...event, description: e.target.value })
           }
         />
       </div>
+
       <div className="bg-default-50 rounded-lg p-2 w-full my-2">
-        <label className="">Attendee Availability</label>
+        <label className="">Event Slots</label>
         <SlotInputs
-          slots={attendee.slots.map(convertToDateTimeSlot)}
+          slots={event.slots.map(convertToDateTimeSlot)}
           onSlotsChange={(newSlots) =>
-            onEventChange({
-              ...attendee,
-              slots: newSlots.map(convertToStrSlot),
-            })
+            onEventChange({ ...event, slots: newSlots.map(convertToStrSlot) })
           }
         />
       </div>
+
       <div>
         <Button type="submit" variant="bordered">
           Save
@@ -69,4 +70,4 @@ const AttendeeForm: React.FC<Props> = ({
   );
 };
 
-export default AttendeeForm;
+export default EventForm;

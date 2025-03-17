@@ -1,4 +1,4 @@
-import SlotsPreview from "./SlotsPreview";
+import SlotsPreview from "./SlotsPreview.js";
 
 interface Props {
   attendees: AttendeeWithId[];
