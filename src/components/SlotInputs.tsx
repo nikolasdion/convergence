@@ -61,7 +61,6 @@ const SlotInputs: React.FC<Props> = ({
       {renderSlots()}
       {!readOnly && (
         <Button
-          className="w-auto"
           variant="ghost"
           onPress={addNewSlot}
           startContent={<PlusIcon className="size-5" />}

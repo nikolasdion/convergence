@@ -12,7 +12,7 @@ import Icon from "../assets/icon.svg";
 
 const ConvergenceNavbar: React.FC = () => {
   return (
-    <Navbar className="bg-primary-100 bg-opacity-50">
+    <Navbar className="border-b-2 border-solid border-foreground-300">
       <NavbarBrand>
         <img src={Icon} className="h-10"></img>
         <p className="font-bold text-inherit">Convergence</p>
