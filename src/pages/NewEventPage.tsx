@@ -19,7 +19,7 @@ const NewEventPage: React.FC = () => {
     console.log(newId);
     if (newId) {
       addToast({ title: "Event created" });
-      navigate(`/event/${newId}`);
+      navigate(`/event/${newId}/view`);
     } else {
       addToast({ title: "Failed to create event. Please try again." });
     }
