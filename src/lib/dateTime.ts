@@ -1,8 +1,5 @@
 import {
   DateFormatter,
-  fromAbsolute,
-  getLocalTimeZone,
-  parseAbsoluteToLocal,
   parseAbsolute,
   ZonedDateTime,
 } from "@internationalized/date";
@@ -17,8 +14,6 @@ export interface ZonedDateTimeSlot {
 export const timezones = Object.keys(tzdata.zones)
   .filter((t) => t !== null && t !== "null")
   .sort();
-
-export const localTimezone = getLocalTimeZone();
 
 // export const convertToZonedDateTimeSlot = (
 //   slotStr: Slot
@@ -35,15 +30,6 @@ export const localTimezone = getLocalTimeZone();
 //     end: slotStr.end.toAbsoluteString(),
 //   };
 // };
-
-const dateFormatter = new DateFormatter("en-GB", {
-  weekday: "long",
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-});
 
 export const formatDate = (date: string, timezone: string): string => {
   const dateFormatter = new DateFormatter("en-GB", {
@@ -76,10 +62,10 @@ export const formatDateRange = (slot: Slot, timezone: string): string => {
 
 const findOverlap = (slot1: Slot, slot2: Slot): Slot | null => {
   try {
-    const start1Epoch = parseAbsoluteToLocal(slot1.start).toDate().getTime();
-    const start2Epoch = parseAbsoluteToLocal(slot2.start).toDate().getTime();
-    const end1Epoch = parseAbsoluteToLocal(slot1.end).toDate().getTime();
-    const end2Epoch = parseAbsoluteToLocal(slot2.end).toDate().getTime();
+    const start1Epoch = Date.parse(slot1.start);
+    const start2Epoch = Date.parse(slot2.start);
+    const end1Epoch = Date.parse(slot1.end);
+    const end2Epoch = Date.parse(slot2.end);
 
     const overlapStart = Math.max(start1Epoch, start2Epoch);
     const overlapEnd = Math.min(end1Epoch, end2Epoch);
@@ -87,20 +73,19 @@ const findOverlap = (slot1: Slot, slot2: Slot): Slot | null => {
     // TODO does this work?
     if (overlapStart < overlapEnd) {
       return {
-        start: fromAbsolute(
-          overlapStart,
-          getLocalTimeZone()
-        ).toAbsoluteString(),
-        end: fromAbsolute(overlapEnd, getLocalTimeZone()).toAbsoluteString(),
+        start: new Date(slot1.start).toISOString(),
+        end: new Date(slot1.start).toISOString(),
       };
     } else {
       return null;
     }
   } catch (error) {
+    console.error(error);
     return null;
   }
 };
 
+// NOT RIGHT!
 const findAllOverlaps = (attendees: AttendeeWithId[]): Slot[] => {
   const overlaps = [];
 

@@ -1,6 +1,7 @@
-import type { NavigateOptions } from "react-router";
-
 import { HeroUIProvider, ToastProvider } from "@heroui/react";
+import { getLocalTimeZone } from "@internationalized/date";
+import { useState } from "react";
+import type { NavigateOptions } from "react-router";
 import { Route, Routes, useHref, useNavigate } from "react-router";
 
 import Navbar from "./components/Navbar";
@@ -14,9 +15,7 @@ import NewEventPage from "./pages/NewEventPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import TestPage from "./pages/TestPage";
 import ViewEventPage from "./pages/ViewEventPage";
-import { useState } from "react";
-import { localTimezone } from "./lib/dateTime";
-import { TimezoneContext } from "./TimeZoneContext";
+import { TimezoneContext } from "./TimezoneContext";
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -26,7 +25,7 @@ declare module "@react-types/shared" {
 
 function App() {
   const navigate = useNavigate();
-  const [timezone, setTimezone] = useState(localTimezone);
+  const [timezone, setTimezone] = useState(getLocalTimeZone());
 
   return (
     <HeroUIProvider

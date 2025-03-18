@@ -1,9 +1,10 @@
-import { Button, DatePicker } from "@heroui/react";
-import { formatDate } from "../lib/dateTime";
-import { parseAbsolute, ZonedDateTime } from "@internationalized/date";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Button, DatePicker } from "@heroui/react";
+import { parseAbsolute, ZonedDateTime } from "@internationalized/date";
 import { useContext } from "react";
-import { TimezoneContext } from "../TimeZoneContext";
+
+import { formatDate } from "../lib/dateTime";
+import { TimezoneContext } from "../TimezoneContext";
 
 interface Props {
   slot: Slot;

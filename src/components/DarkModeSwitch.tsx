@@ -1,6 +1,6 @@
+import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { Button } from "@heroui/react";
 import { useTheme } from "@heroui/use-theme";
-import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 
 const DarkModeSwitch: React.FC = () => {
   const { theme, setTheme } = useTheme();

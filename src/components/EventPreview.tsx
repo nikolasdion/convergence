@@ -1,4 +1,4 @@
-import SlotsPreview from "./SlotsPreview.js";
+import SlotsPreview from "./SlotsPreview";
 
 interface Props {
   event: EventWithoutId;

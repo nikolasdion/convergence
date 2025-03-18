@@ -1,7 +1,7 @@
 import { Link, Navbar, NavbarContent, NavbarItem } from "@heroui/react";
-import DarkModeSwitch from "./DarkModeSwitch.js";
 
-import TimezonePicker from "./TimezonePicker.js";
+import DarkModeSwitch from "./DarkModeSwitch";
+import TimezonePicker from "./TimezonePicker";
 
 interface Props {
   onTimezoneChange: (timezone: string) => void;

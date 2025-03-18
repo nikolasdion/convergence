@@ -1,8 +1,7 @@
-import { Button } from "@heroui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { getLocalTimeZone, now } from "@internationalized/date";
+import { Button } from "@heroui/react";
 
-import SlotInput from "./SlotInput.js";
+import SlotInput from "./SlotInput";
 
 interface Props {
   slots: Slot[];
@@ -11,32 +10,31 @@ interface Props {
 
 const SlotInputs: React.FC<Props> = ({ slots, onSlotsChange }) => {
   const addNewSlot = () => {
-    const newSlots = [...slots];
-    if (newSlots[-1]) {
-      newSlots.push({ ...slots[-1] });
+    // TODO do something clever with the default start value, maybe take the
+    // start of the event?
+    if (slots[-1]) {
+      // Duplicate the last slot
+      onSlotsChange([...slots, slots[-1]]);
     } else {
-      const timeNow = now(getLocalTimeZone());
-      newSlots.push({
-        start: timeNow.toAbsoluteString(),
-        end: timeNow.add({ hours: 1 }).toAbsoluteString(),
-      });
+      // 1 hour slot starting from current time
+      const timeNow = Date.now();
+      const newSlot = {
+        start: new Date(timeNow).toISOString(),
+        end: new Date(timeNow + 60 * 60 * 1000).toISOString(),
+      };
+      onSlotsChange([...slots, newSlot]);
     }
-    onSlotsChange(newSlots);
   };
 
   const renderSlots = () => {
     return slots.map((slot, index) => {
       const onChange = (newSlot?: Slot) => {
-        const newSlots = [...slots];
-
         if (!newSlot) {
           // remove slot
-          newSlots.splice(index, 1);
-          onSlotsChange(newSlots);
+          onSlotsChange(slots.toSpliced(index, 1));
         } else {
           // change slot
-          newSlots[index] = newSlot;
-          onSlotsChange(newSlots);
+          onSlotsChange(slots.toSpliced(index, 1, newSlot));
         }
       };
 

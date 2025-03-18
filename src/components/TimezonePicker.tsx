@@ -1,7 +1,8 @@
 import { Autocomplete, AutocompleteItem } from "@heroui/react";
-import { timezones } from "../lib/dateTime";
 import { useContext } from "react";
-import { TimezoneContext } from "../TimeZoneContext";
+
+import { timezones } from "../lib/dateTime";
+import { TimezoneContext } from "../TimezoneContext";
 
 interface Props {
   onSelectedTimezoneChane: (timezone: string) => void;

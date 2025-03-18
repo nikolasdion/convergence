@@ -1,6 +1,7 @@
 import { useContext } from "react";
+
 import { formatDateRange } from "../lib/dateTime";
-import { TimezoneContext } from "../TimeZoneContext";
+import { TimezoneContext } from "../TimezoneContext";
 
 interface Props {
   slots: Slot[];

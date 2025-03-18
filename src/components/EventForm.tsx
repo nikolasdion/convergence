@@ -1,8 +1,8 @@
-import { Button, Form, Input, Textarea } from "@heroui/react";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-
-import SlotInputs from "./SlotInputs.js";
+import { Button, Form, Input, Textarea } from "@heroui/react";
 import { useNavigate } from "react-router";
+
+import SlotInputs from "./SlotInputs";
 
 interface Props {
   event: EventWithoutId;
