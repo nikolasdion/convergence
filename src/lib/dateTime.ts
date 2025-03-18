@@ -4,16 +4,12 @@ import {
   ZonedDateTime,
 } from "@internationalized/date";
 
-import tzdata from "tzdata";
+export { zones as timezones } from "./timezone.json";
 
 export interface ZonedDateTimeSlot {
   start: ZonedDateTime;
   end: ZonedDateTime;
 }
-
-export const timezones = Object.keys(tzdata.zones)
-  .filter((t) => t !== null && t !== "null")
-  .sort();
 
 // export const convertToZonedDateTimeSlot = (
 //   slotStr: Slot
