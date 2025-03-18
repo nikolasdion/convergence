@@ -6,6 +6,11 @@ import PageTitle from "../components/PageTitle";
 import EventPreview from "../components/EventPreview";
 import AttendeesPreview from "../components/AttendeesPreview";
 import LoadingSpinner from "../components/LoadingSpinner";
+import {
+  ExclamationTriangleIcon,
+  PencilIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 
 const ViewEventPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -68,15 +73,33 @@ const ViewEventPage: React.FC = () => {
       <div className="flex flex-row align-middle gap-2 items-center justify-between">
         <PageTitle>{event.name}</PageTitle>
         <div className="flex gap-2">
-          <Button onPress={onEditPress}>Edit event</Button>
-          <Button onPress={onDelete}>Delete event</Button>
+          <Button
+            startContent={<PlusIcon className="size-6" />}
+            onPress={onAddAttendeePress}
+            color="secondary"
+          >
+            New attendee
+          </Button>
+          <Button
+            startContent={<PencilIcon className="size-6" />}
+            onPress={onEditPress}
+            color="primary"
+          >
+            Edit event
+          </Button>
+          <Button
+            onPress={onDelete}
+            startContent={<ExclamationTriangleIcon className="size-6" />}
+            color="danger"
+          >
+            Delete event
+          </Button>
         </div>
       </div>
 
       <EventPreview event={event} />
 
       <AttendeesPreview attendees={event.attendees} />
-      <Button onPress={onAddAttendeePress}>Add new attendee</Button>
     </>
   );
 };

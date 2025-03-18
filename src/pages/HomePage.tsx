@@ -42,7 +42,7 @@ const HomePage: React.FC = () => {
         onPress={() => navigate("/event/new")}
         size="lg"
         startContent={<PlusIcon className="size-32" />}
-        className="max-w-96 text-xl w-80"
+        className="p-8 text-xl"
         color="primary"
       >
         Create new event

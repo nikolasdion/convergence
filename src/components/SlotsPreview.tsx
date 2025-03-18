@@ -12,7 +12,9 @@ const SlotsPreview: React.FC<Props> = ({ slots }) => {
     });
   };
 
-  return <ul className="w-fit flex-row flex-wrap p-2">{renderSlots()}</ul>;
+  return (
+    <ul className="w-fit flex-row flex-wrap p-2 list-disc">{renderSlots()}</ul>
+  );
 };
 
 export default SlotsPreview;

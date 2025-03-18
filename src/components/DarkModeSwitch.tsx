@@ -11,12 +11,13 @@ const DarkModeSwitch: React.FC = () => {
 
   return (
     <Button
-      variant="flat"
+      variant="ghost"
       color="default"
       isIconOnly
       onPress={onChange}
       radius="full"
-      className="p-1"
+      className="p-2"
+      size="md"
     >
       {theme === "light" ? <MoonIcon /> : <SunIcon />}
     </Button>

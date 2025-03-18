@@ -51,7 +51,7 @@ const AttendeeForm: React.FC<Props> = ({
         />
       </div>
       <div className="border-solid border-2 border-default-300 rounded-lg p-4 w-full my-2">
-        <h2 className="pb-4">When are you available?</h2>
+        <h2 className="text-lg pb-4">When are you available?</h2>
         <SlotInputs
           slots={attendee.slots}
           onSlotsChange={(slots) =>
