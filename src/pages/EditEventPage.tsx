@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+
 import EventForm from "../components/EventForm";
 import { deleteEvent, fetchEvent, updateEvent } from "../lib/data";
 import { addToast, Button } from "@heroui/react";
@@ -70,9 +72,20 @@ const EditEventPage: React.FC = () => {
   }
   return (
     <>
-      <PageTitle>Edit Event</PageTitle>
+      <div className="flex flex-row align-middle gap-2 items-center justify-between">
+        <PageTitle>Edit Event</PageTitle>
+        <div className="flex gap-2">
+          <Button
+            onPress={onDelete}
+            startContent={<ExclamationTriangleIcon className="size-6" />}
+            color="danger"
+          >
+            Delete event
+          </Button>
+        </div>
+      </div>
+
       <EventForm event={event} onEventChange={setEvent} onSubmit={onSubmit} />
-      <Button onPress={onDelete}>Delete event</Button>
     </>
   );
 };

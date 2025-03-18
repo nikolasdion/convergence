@@ -1,11 +1,11 @@
 import { Button, DatePicker } from "@heroui/react";
-import { DateTimeSlot, formatDate } from "../lib/dateTime";
-import { ZonedDateTime } from "@internationalized/date";
+import { formatDate } from "../lib/dateTime";
+import { parseAbsoluteToLocal, ZonedDateTime } from "@internationalized/date";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface Props {
-  slot: DateTimeSlot;
-  onSlotChange: (slot?: DateTimeSlot) => void;
+  slot: Slot;
+  onSlotChange: (slot?: Slot) => void;
   readOnly?: boolean;
 }
 
@@ -14,14 +14,17 @@ const SlotInput: React.FC<Props> = ({
   onSlotChange,
   readOnly = false,
 }) => {
+  const start = parseAbsoluteToLocal(slot.start);
+  const end = parseAbsoluteToLocal(slot.end);
+
   const onStartChange = (value: ZonedDateTime | null) => {
     if (value) {
-      onSlotChange({ ...slot, start: value });
+      onSlotChange({ ...slot, start: value.toAbsoluteString() });
     }
   };
   const onEndChange = (value: ZonedDateTime | null) => {
     if (value) {
-      onSlotChange({ ...slot, end: value });
+      onSlotChange({ ...slot, end: value.toAbsoluteString() });
     }
   };
   const onRemoveButtonClick = () => {
@@ -40,22 +43,22 @@ const SlotInput: React.FC<Props> = ({
             isReadOnly={readOnly}
             hideTimeZone
             showMonthAndYearPickers
-            value={slot.start}
+            value={start}
             onChange={onStartChange}
             label="From"
             labelPlacement="outside-left"
-            description={formatDate(slot.start)}
+            description={formatDate(start)}
           />
           <DatePicker
             isReadOnly={readOnly}
             hideTimeZone
             showMonthAndYearPickers
-            value={slot.end}
+            value={end}
             onChange={onEndChange}
             label="To"
             labelPlacement="outside-left"
-            description={formatDate(slot.end)}
-            minValue={slot.start}
+            description={formatDate(end)}
+            minValue={start}
           />
           <Button
             title="Remove slot"

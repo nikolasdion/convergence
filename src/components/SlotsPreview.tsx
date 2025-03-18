@@ -1,4 +1,4 @@
-import { formatDate } from "../lib/dateTime";
+import { formatDateRange } from "../lib/dateTime";
 
 interface Props {
   slots: Slot[];
@@ -8,11 +8,7 @@ const SlotsPreview: React.FC<Props> = ({ slots }) => {
   // TODO do something clever here so the timeslots are not cluttered with less useful info, e.g. year
   const renderSlots = () => {
     return slots.map((slot, index) => {
-      return (
-        <li key={index}>
-          {formatDate(slot.start)} to {formatDate(slot.end)}
-        </li>
-      );
+      return <li key={index}>{formatDateRange(slot)}</li>;
     });
   };
 

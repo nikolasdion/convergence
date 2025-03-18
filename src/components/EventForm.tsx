@@ -1,6 +1,7 @@
 import { Button, Form, Input, Textarea } from "@heroui/react";
+import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+
 import SlotInputs from "./SlotInputs.js";
-import { convertToDateTimeSlot, convertToStrSlot } from "../lib/dateTime";
 import { useNavigate } from "react-router";
 
 interface Props {
@@ -23,12 +24,13 @@ const EventForm: React.FC<Props> = ({ event, onEventChange, onSubmit }) => {
 
   return (
     <Form className="" onSubmit={onFormSubmit}>
-      <div className="bg-default-50 rounded-lg p-2 w-full my-2">
+      <div className="border-solid border-2 border-default-300 rounded-lg p-4 w-full my-2">
         <Input
+          className="pb-3"
           isRequired
           errorMessage=""
           label="Name"
-          name="name"
+          size="lg"
           placeholder="Enter the event name"
           labelPlacement="outside"
           type="text"
@@ -37,9 +39,9 @@ const EventForm: React.FC<Props> = ({ event, onEventChange, onSubmit }) => {
         />
         <Textarea
           errorMessage=""
-          label="Description"
-          name="name"
-          placeholder="(Optional) Enter event description"
+          label="Description (Optional)"
+          size="lg"
+          placeholder="Enter event description"
           value={event.description}
           labelPlacement="outside"
           onChange={(e) =>
@@ -48,21 +50,28 @@ const EventForm: React.FC<Props> = ({ event, onEventChange, onSubmit }) => {
         />
       </div>
 
-      <div className="bg-default-50 rounded-lg p-2 w-full my-2">
-        <label className="">Event Slots</label>
+      <div className="border-solid border-2 border-default-300 rounded-lg p-4 w-full my-2">
+        <h2 className="pb-4">What are the possible time slots?</h2>
         <SlotInputs
-          slots={event.slots.map(convertToDateTimeSlot)}
-          onSlotsChange={(newSlots) =>
-            onEventChange({ ...event, slots: newSlots.map(convertToStrSlot) })
-          }
+          slots={event.slots}
+          onSlotsChange={(slots) => onEventChange({ ...event, slots })}
         />
       </div>
 
-      <div>
-        <Button type="submit" variant="bordered">
+      <div className="flex gap-5 w-full justify-center">
+        <Button
+          type="submit"
+          startContent={<CheckIcon className="size-6" />}
+          color="primary"
+        >
           Save
         </Button>
-        <Button type="button" variant="bordered" onPress={onCancel}>
+        <Button
+          type="button"
+          onPress={onCancel}
+          startContent={<XMarkIcon className="size-6" />}
+          color="default"
+        >
           Cancel
         </Button>
       </div>

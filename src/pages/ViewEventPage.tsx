@@ -1,4 +1,4 @@
-import { addToast, Button, Code } from "@heroui/react";
+import { addToast, Button } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { deleteEvent, fetchEvent } from "../lib/data";

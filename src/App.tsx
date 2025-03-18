@@ -31,7 +31,7 @@ function App() {
       <ToastProvider placement="top-center" />
       <ErrorBoundary>
         <Navbar />
-        <div className="max-w-5xl m-auto">
+        <div className="max-w-4xl m-auto">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/event/new" element={<NewEventPage />} />

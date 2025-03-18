@@ -1,7 +1,7 @@
 import { Button, Form, Input, Textarea } from "@heroui/react";
 import SlotInputs from "./SlotInputs.js";
-import { convertToDateTimeSlot, convertToStrSlot } from "../lib/dateTime";
 import { useNavigate } from "react-router";
+import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   attendee: AttendeeWithoutId;
@@ -27,41 +27,55 @@ const AttendeeForm: React.FC<Props> = ({
 
   return (
     <Form className="" onSubmit={onFormSubmit}>
-      <div className="bg-default-50 rounded-lg p-2 w-full my-2">
+      <div className="border-solid border-2 border-default-300 rounded-lg p-4 w-full my-2">
         <Input
+          className="pb-3"
           isRequired
           label="Name"
+          size="lg"
           placeholder="Enter the attendee name"
+          labelPlacement="outside"
           type="text"
           value={attendee.name}
           onChange={(e) => onEventChange({ ...attendee, name: e.target.value })}
         />
         <Textarea
           label="Comment (optional)"
+          size="lg"
           placeholder="Anything to add?"
           value={attendee.comment}
+          labelPlacement="outside"
           onChange={(e) =>
             onEventChange({ ...attendee, comment: e.target.value })
           }
         />
       </div>
-      <div className="bg-default-50 rounded-lg p-2 w-full my-2">
-        <label className="">Attendee Availability</label>
+      <div className="border-solid border-2 border-default-300 rounded-lg p-4 w-full my-2">
+        <h2 className="pb-4">When are you available?</h2>
         <SlotInputs
-          slots={attendee.slots.map(convertToDateTimeSlot)}
-          onSlotsChange={(newSlots) =>
+          slots={attendee.slots}
+          onSlotsChange={(slots) =>
             onEventChange({
               ...attendee,
-              slots: newSlots.map(convertToStrSlot),
+              slots,
             })
           }
         />
       </div>
-      <div>
-        <Button type="submit" variant="bordered">
+      <div className="flex gap-5 w-full justify-center">
+        <Button
+          type="submit"
+          startContent={<CheckIcon className="size-6" />}
+          color="primary"
+        >
           Save
         </Button>
-        <Button type="button" variant="bordered" onPress={onCancel}>
+        <Button
+          type="button"
+          onPress={onCancel}
+          startContent={<XMarkIcon className="size-6" />}
+          color="default"
+        >
           Cancel
         </Button>
       </div>

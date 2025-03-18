@@ -1,12 +1,12 @@
 import { Button } from "@heroui/react";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { getLocalTimeZone, now } from "@internationalized/date";
 
 import SlotInput from "./SlotInput.js";
-import { DateTimeSlot } from "../lib/dateTime";
 
 interface Props {
-  slots: DateTimeSlot[];
-  onSlotsChange: (slots: DateTimeSlot[]) => void;
+  slots: Slot[];
+  onSlotsChange: (slots: Slot[]) => void;
   readOnly?: boolean;
 }
 
@@ -20,9 +20,10 @@ const SlotInputs: React.FC<Props> = ({
     if (newSlots[-1]) {
       newSlots.push({ ...slots[-1] });
     } else {
+      const timeNow = now(getLocalTimeZone());
       newSlots.push({
-        start: now(getLocalTimeZone()),
-        end: now(getLocalTimeZone()).add({ hours: 1 }),
+        start: timeNow.toAbsoluteString(),
+        end: timeNow.add({ hours: 1 }).toAbsoluteString(),
       });
     }
     onSlotsChange(newSlots);
@@ -30,7 +31,7 @@ const SlotInputs: React.FC<Props> = ({
 
   const renderSlots = () => {
     return slots.map((slot, index) => {
-      const onChange = (newSlot?: DateTimeSlot) => {
+      const onChange = (newSlot?: Slot) => {
         const newSlots = [...slots];
 
         if (!newSlot) {
@@ -59,12 +60,16 @@ const SlotInputs: React.FC<Props> = ({
     <div className="">
       {renderSlots()}
       {!readOnly && (
-        <Button className="w-auto" variant="ghost" onPress={addNewSlot}>
+        <Button
+          className="w-auto"
+          variant="ghost"
+          onPress={addNewSlot}
+          startContent={<PlusIcon className="size-5" />}
+        >
           Add new slot
         </Button>
       )}
     </div>
   );
 };
-
 export default SlotInputs;
