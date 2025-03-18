@@ -1,22 +1,19 @@
-import {
-  Link,
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-} from "@heroui/react";
+import { Link, Navbar, NavbarContent, NavbarItem } from "@heroui/react";
 import DarkModeSwitch from "./DarkModeSwitch.js";
-import { getLocalTimeZone } from "@internationalized/date";
 
-import Icon from "../assets/icon.svg";
+import TimezonePicker from "./TimezonePicker.js";
 
-const ConvergenceNavbar: React.FC = () => {
+interface Props {
+  onTimezoneChange: (timezone: string) => void;
+}
+
+const ConvergenceNavbar: React.FC<Props> = ({ onTimezoneChange }) => {
   return (
     <Navbar className="border-b-2 border-solid border-foreground-300">
-      <NavbarBrand>
-        <img src={Icon} className="h-10"></img>
-        <p className="font-bold text-inherit">Convergence</p>
-      </NavbarBrand>
+      <NavbarContent>
+        <TimezonePicker onSelectedTimezoneChane={onTimezoneChange} />
+      </NavbarContent>
+
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <Link color="foreground" href="/" underline="hover">
@@ -25,7 +22,6 @@ const ConvergenceNavbar: React.FC = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>Timezone: {getLocalTimeZone()}</NavbarItem>
         <NavbarItem>
           <DarkModeSwitch />
         </NavbarItem>

@@ -1,18 +1,22 @@
 import type { NavigateOptions } from "react-router";
 
-import { Route, Routes, useNavigate, useHref } from "react-router";
 import { HeroUIProvider, ToastProvider } from "@heroui/react";
-import HomePage from "./pages/HomePage";
+import { Route, Routes, useHref, useNavigate } from "react-router";
+
 import Navbar from "./components/Navbar";
 import ErrorBoundary from "./ErrorBoundary";
-import NewEventPage from "./pages/NewEventPage";
 import { getHeroUiLocale } from "./lib/locale";
-import ViewEventPage from "./pages/ViewEventPage";
-import EditEventPage from "./pages/EditEventPage";
-import NewAttendeePage from "./pages/NewAttendeePage";
 import EditAttendeePage from "./pages/EditAttendeePage";
+import EditEventPage from "./pages/EditEventPage";
+import HomePage from "./pages/HomePage";
+import NewAttendeePage from "./pages/NewAttendeePage";
+import NewEventPage from "./pages/NewEventPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import TestPage from "./pages/TestPage";
+import ViewEventPage from "./pages/ViewEventPage";
+import { useState } from "react";
+import { localTimezone } from "./lib/dateTime";
+import { TimezoneContext } from "./TimeZoneContext";
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -22,6 +26,7 @@ declare module "@react-types/shared" {
 
 function App() {
   const navigate = useNavigate();
+  const [timezone, setTimezone] = useState(localTimezone);
 
   return (
     <HeroUIProvider
@@ -29,25 +34,27 @@ function App() {
       useHref={useHref}
       locale={getHeroUiLocale()}
     >
-      <ToastProvider placement="top-center" />
-      <ErrorBoundary>
-        <Navbar />
-        <div className="max-w-4xl m-auto">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/event/new" element={<NewEventPage />} />
-            <Route path="/event/:id/view/" element={<ViewEventPage />} />
-            <Route path="/event/:id/edit/" element={<EditEventPage />} />
-            <Route path="/event/:id/attend/" element={<NewAttendeePage />} />
-            <Route
-              path="/event/:id/attend/:attendeeId/edit/"
-              element={<EditAttendeePage />}
-            />{" "}
-            <Route path="/test/" element={<TestPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </div>
-      </ErrorBoundary>
+      <TimezoneContext value={timezone}>
+        <ToastProvider placement="top-center" />
+        <ErrorBoundary>
+          <Navbar onTimezoneChange={setTimezone} />
+          <div className="max-w-4xl m-auto">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/event/new" element={<NewEventPage />} />
+              <Route path="/event/:id/view/" element={<ViewEventPage />} />
+              <Route path="/event/:id/edit/" element={<EditEventPage />} />
+              <Route path="/event/:id/attend/" element={<NewAttendeePage />} />
+              <Route
+                path="/event/:id/attend/:attendeeId/edit/"
+                element={<EditAttendeePage />}
+              />
+              <Route path="/test/" element={<TestPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </div>
+        </ErrorBoundary>
+      </TimezoneContext>
     </HeroUIProvider>
   );
 }

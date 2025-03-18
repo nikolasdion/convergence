@@ -2,33 +2,39 @@ import {
   DateFormatter,
   fromAbsolute,
   getLocalTimeZone,
-  maxDate,
-  minDate,
   parseAbsoluteToLocal,
-  parseTime,
+  parseAbsolute,
   ZonedDateTime,
 } from "@internationalized/date";
+
+import tzdata from "tzdata";
 
 export interface ZonedDateTimeSlot {
   start: ZonedDateTime;
   end: ZonedDateTime;
 }
 
-export const convertToZonedDateTimeSlot = (
-  slotStr: Slot
-): ZonedDateTimeSlot => {
-  return {
-    start: parseAbsoluteToLocal(slotStr.start),
-    end: parseAbsoluteToLocal(slotStr.end),
-  };
-};
+export const timezones = Object.keys(tzdata.zones)
+  .filter((t) => t !== null && t !== "null")
+  .sort();
 
-export const convertToStrSlot = (slotStr: ZonedDateTimeSlot): Slot => {
-  return {
-    start: slotStr.start.toAbsoluteString(),
-    end: slotStr.end.toAbsoluteString(),
-  };
-};
+export const localTimezone = getLocalTimeZone();
+
+// export const convertToZonedDateTimeSlot = (
+//   slotStr: Slot
+// ): ZonedDateTimeSlot => {
+//   return {
+//     start: parseAbsoluteToLocal(slotStr.start),
+//     end: parseAbsoluteToLocal(slotStr.end),
+//   };
+// };
+
+// export const convertToStrSlot = (slotStr: ZonedDateTimeSlot): Slot => {
+//   return {
+//     start: slotStr.start.toAbsoluteString(),
+//     end: slotStr.end.toAbsoluteString(),
+//   };
+// };
 
 const dateFormatter = new DateFormatter("en-GB", {
   weekday: "long",
@@ -39,18 +45,32 @@ const dateFormatter = new DateFormatter("en-GB", {
   minute: "numeric",
 });
 
-export const formatDate = (date: ZonedDateTime | string): string => {
-  if (date instanceof ZonedDateTime) {
-    return dateFormatter.format(date.toDate());
-  } else {
-    return dateFormatter.format(parseAbsoluteToLocal(date).toDate());
-  }
+export const formatDate = (date: string, timezone: string): string => {
+  const dateFormatter = new DateFormatter("en-GB", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    timeZone: timezone,
+  });
+  return dateFormatter.format(new Date(date));
 };
 
-export const formatDateRange = (slot: Slot): string => {
+export const formatDateRange = (slot: Slot, timezone: string): string => {
+  const dateFormatter = new DateFormatter("en-GB", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    timeZone: timezone,
+  });
   return dateFormatter.formatRange(
-    parseAbsoluteToLocal(slot.start).toDate(),
-    parseAbsoluteToLocal(slot.end).toDate()
+    parseAbsolute(slot.start, timezone).toDate(),
+    parseAbsolute(slot.end, timezone).toDate()
   );
 };
 

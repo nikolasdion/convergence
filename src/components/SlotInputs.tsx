@@ -7,14 +7,9 @@ import SlotInput from "./SlotInput.js";
 interface Props {
   slots: Slot[];
   onSlotsChange: (slots: Slot[]) => void;
-  readOnly?: boolean;
 }
 
-const SlotInputs: React.FC<Props> = ({
-  slots,
-  onSlotsChange,
-  readOnly = false,
-}) => {
+const SlotInputs: React.FC<Props> = ({ slots, onSlotsChange }) => {
   const addNewSlot = () => {
     const newSlots = [...slots];
     if (newSlots[-1]) {
@@ -45,29 +40,20 @@ const SlotInputs: React.FC<Props> = ({
         }
       };
 
-      return (
-        <SlotInput
-          key={index}
-          readOnly={readOnly}
-          slot={slot}
-          onSlotChange={onChange}
-        />
-      );
+      return <SlotInput key={index} slot={slot} onSlotChange={onChange} />;
     });
   };
 
   return (
     <div className="">
-      {renderSlots()}
-      {!readOnly && (
-        <Button
-          variant="ghost"
-          onPress={addNewSlot}
-          startContent={<PlusIcon className="size-5" />}
-        >
-          Add new slot
-        </Button>
-      )}
+      <> {renderSlots()}</>
+      <Button
+        variant="ghost"
+        onPress={addNewSlot}
+        startContent={<PlusIcon className="size-5" />}
+      >
+        Add new slot
+      </Button>
     </div>
   );
 };

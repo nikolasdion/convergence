@@ -1,14 +1,17 @@
+import { useContext } from "react";
 import { formatDateRange } from "../lib/dateTime";
+import { TimezoneContext } from "../TimeZoneContext";
 
 interface Props {
   slots: Slot[];
 }
 
 const SlotsPreview: React.FC<Props> = ({ slots }) => {
+  const timezone = useContext(TimezoneContext);
   // TODO do something clever here so the timeslots are not cluttered with less useful info, e.g. year
   const renderSlots = () => {
     return slots.map((slot, index) => {
-      return <li key={index}>{formatDateRange(slot)}</li>;
+      return <li key={index}>{formatDateRange(slot, timezone)}</li>;
     });
   };
 
