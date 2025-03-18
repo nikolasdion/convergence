@@ -12,6 +12,7 @@ import EditEventPage from "./pages/EditEventPage";
 import NewAttendeePage from "./pages/NewAttendeePage";
 import EditAttendeePage from "./pages/EditAttendeePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import TestPage from "./pages/TestPage";
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -41,7 +42,8 @@ function App() {
             <Route
               path="/event/:id/attend/:attendeeId/edit/"
               element={<EditAttendeePage />}
-            />
+            />{" "}
+            <Route path="/test/" element={<TestPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
