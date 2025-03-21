@@ -31,39 +31,39 @@ const SlotInput: React.FC<Props> = ({ slot, onSlotChange }) => {
     onSlotChange();
   };
 
+  // TODO add error when overlapping with the other slots
+
   return (
     <div className="flex flex-row gap-x-2 my-2 px-2 py-1">
-      <>
-        <DatePicker
-          hideTimeZone
-          showMonthAndYearPickers
-          value={start}
-          onChange={onStartChange}
-          label="From"
-          labelPlacement="outside-left"
-          description={formatDate(slot.start, timezone)}
-        />
-        <DatePicker
-          hideTimeZone
-          showMonthAndYearPickers
-          value={end}
-          onChange={onEndChange}
-          label="To"
-          labelPlacement="outside-left"
-          description={formatDate(slot.end, timezone)}
-          minValue={start}
-        />
-        <Button
-          title="Remove slot"
-          onPress={onRemoveButtonClick}
-          isIconOnly
-          // color="danger"
-          variant="light"
-          className="p-2"
-        >
-          <XMarkIcon />
-        </Button>
-      </>
+      <DatePicker
+        hideTimeZone
+        showMonthAndYearPickers
+        value={start}
+        onChange={onStartChange}
+        label="From"
+        labelPlacement="outside-left"
+        description={formatDate(slot.start, timezone)}
+      />
+      <DatePicker
+        hideTimeZone
+        showMonthAndYearPickers
+        value={end}
+        onChange={onEndChange}
+        label="To"
+        labelPlacement="outside-left"
+        description={formatDate(slot.end, timezone)}
+        minValue={start}
+      />
+      <Button
+        title="Remove slot"
+        onPress={onRemoveButtonClick}
+        isIconOnly
+        // color="danger"
+        variant="light"
+        className="p-2"
+      >
+        <XMarkIcon />
+      </Button>
     </div>
   );
 };

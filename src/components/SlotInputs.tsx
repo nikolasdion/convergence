@@ -10,20 +10,22 @@ interface Props {
 
 const SlotInputs: React.FC<Props> = ({ slots, onSlotsChange }) => {
   const addNewSlot = () => {
-    // TODO do something clever with the default start value, maybe take the
-    // start of the event?
-    if (slots[-1]) {
-      // Duplicate the last slot
-      onSlotsChange([...slots, slots[-1]]);
+    let start: string;
+
+    if (slots.length > 0) {
+      // Start from the end of the last slot
+      start = slots[slots.length - 1].end;
     } else {
+      // TODO do something clever with the default start value, maybe take the
+      // start of the event?
       // 1 hour slot starting from current time
-      const timeNow = Date.now();
-      const newSlot = {
-        start: new Date(timeNow).toISOString(),
-        end: new Date(timeNow + 60 * 60 * 1000).toISOString(),
-      };
-      onSlotsChange([...slots, newSlot]);
+      start = new Date(Date.now()).toISOString();
     }
+
+    const endTimestamp = Date.parse(start) + 60 * 60 * 1000;
+    const end = new Date(endTimestamp).toISOString();
+
+    onSlotsChange([...slots, { start, end }]);
   };
 
   const renderSlots = () => {
@@ -47,7 +49,7 @@ const SlotInputs: React.FC<Props> = ({ slots, onSlotsChange }) => {
       <> {renderSlots()}</>
       <Button
         variant="ghost"
-        onPress={addNewSlot}
+        onPress={() => addNewSlot()}
         startContent={<PlusIcon className="size-5" />}
       >
         Add new slot
