@@ -23,7 +23,10 @@ const NewAttendeePage: React.FC = () => {
 
   useEffect(() => {
     if (!id) {
-      addToast({ title: "Cannot fetch event: no ID supplied" });
+      addToast({
+        title: "Cannot fetch event: no ID supplied",
+        color: "danger",
+      });
       return;
     }
 
@@ -35,14 +38,17 @@ const NewAttendeePage: React.FC = () => {
         setIsLoading(false);
       })
       .catch(() => {
-        addToast({ title: "Failed to fetch event" });
+        addToast({ title: "Failed to fetch event", color: "danger" });
         return;
       });
   }, []);
 
   const onSubmit = async () => {
     if (!id) {
-      addToast({ title: "Cannot add attendee: no ID supplied" });
+      addToast({
+        title: "Cannot add attendee: no ID supplied",
+        color: "danger",
+      });
       return;
     }
     try {
@@ -50,7 +56,10 @@ const NewAttendeePage: React.FC = () => {
       addToast({ title: "Added attendee" });
       navigate(`/event/${id}/view`);
     } catch {
-      addToast({ title: "Failed to add attendee. Please try again." });
+      addToast({
+        title: "Failed to add attendee. Please try again.",
+        color: "danger",
+      });
     }
   };
 

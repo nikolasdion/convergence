@@ -16,7 +16,7 @@ const HomePage: React.FC = () => {
         setEvents(events);
       })
       .catch(() => {
-        addToast({ title: "Failed to fetch events, please refresh" });
+        addToast({ title: "Failed to fetch events", color: "danger" });
       })
       .finally(() => {
         setIsLoading(false);

@@ -26,7 +26,10 @@ const ViewEventPage: React.FC = () => {
 
   useEffect(() => {
     if (!id) {
-      addToast({ title: "Cannot fetch event: no ID supplied" });
+      addToast({
+        title: "Cannot fetch event: no ID supplied",
+        color: "danger",
+      });
       return;
     }
 
@@ -38,7 +41,7 @@ const ViewEventPage: React.FC = () => {
         setIsLoading(false);
       })
       .catch(() => {
-        addToast({ title: "Failed to fetch event" });
+        addToast({ title: "Failed to fetch event", color: "danger" });
         return;
       });
   }, []);
@@ -53,15 +56,21 @@ const ViewEventPage: React.FC = () => {
 
   const onDelete = async () => {
     if (!id) {
-      addToast({ title: "Cannot delete event: no ID supplied" });
+      addToast({
+        title: "Cannot delete event: no ID supplied",
+        color: "danger",
+      });
       return;
     }
     try {
       await deleteEvent(id);
-      addToast({ title: "Event deleted" });
+      addToast({ title: "Event deleted", color: "success" });
       navigate(`/`);
     } catch {
-      addToast({ title: "Failed to delete event. Please try again." });
+      addToast({
+        title: "Failed to delete event. Please try again.",
+        color: "danger",
+      });
     }
   };
 

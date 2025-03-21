@@ -18,10 +18,13 @@ const NewEventPage: React.FC = () => {
     const newId = await createEvent(event);
     console.log(newId);
     if (newId) {
-      addToast({ title: "Event created" });
+      addToast({ title: "Event created", color: "success" });
       navigate(`/event/${newId}/view`);
     } else {
-      addToast({ title: "Failed to create event. Please try again." });
+      addToast({
+        title: "Failed to create event. Please try again.",
+        color: "danger",
+      });
     }
   };
 
