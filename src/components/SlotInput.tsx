@@ -17,16 +17,30 @@ const SlotInput: React.FC<Props> = ({ slot, onSlotChange }) => {
   const start = parseAbsolute(slot.start, timezone);
   const end = parseAbsolute(slot.end, timezone);
 
-  const onStartChange = (value: ZonedDateTime | null) => {
-    if (value) {
-      onSlotChange({ ...slot, start: value.toAbsoluteString() });
+  const onStartChange = (newStart: ZonedDateTime | null) => {
+    if (newStart) {
+      // if the new start is later than the current end, change the end value to 5 minutes after the new start
+      const newEnd =
+        end.compare(newStart) < 0 ? newStart.add({ minutes: 5 }) : end;
+      onSlotChange({
+        start: newStart.toAbsoluteString(),
+        end: newEnd.toAbsoluteString(),
+      });
     }
   };
-  const onEndChange = (value: ZonedDateTime | null) => {
-    if (value) {
-      onSlotChange({ ...slot, end: value.toAbsoluteString() });
+
+  const onEndChange = (newEnd: ZonedDateTime | null) => {
+    if (newEnd) {
+      // if the current start is later than the new end, change the start value to 5 minutes before the new end
+      const newStart =
+        newEnd.compare(start) < 0 ? newEnd.add({ minutes: -5 }) : start;
+      onSlotChange({
+        start: newStart.toAbsoluteString(),
+        end: newEnd.toAbsoluteString(),
+      });
     }
   };
+
   const onRemoveButtonClick = () => {
     onSlotChange();
   };

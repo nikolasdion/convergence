@@ -27,7 +27,7 @@ const ViewEventPage: React.FC = () => {
   useEffect(() => {
     if (!id) {
       addToast({
-        title: "Cannot fetch event: no ID supplied",
+        title: "Unable to fetch event: no ID supplied",
         color: "danger",
       });
       return;
@@ -57,7 +57,7 @@ const ViewEventPage: React.FC = () => {
   const onDelete = async () => {
     if (!id) {
       addToast({
-        title: "Cannot delete event: no ID supplied",
+        title: "Unable to delete event: no ID supplied",
         color: "danger",
       });
       return;

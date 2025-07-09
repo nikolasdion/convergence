@@ -1,3 +1,4 @@
+import { findAllIntersections } from "../lib/intersection";
 import SlotsPreview from "./SlotsPreview";
 
 interface Props {
@@ -11,10 +12,16 @@ const EventPreview: React.FC<Props> = ({ event }) => {
         <div className="flex-grow">
           <p className="italic text-medium">{event.description}</p>
         </div>
-        <div className="flex-grow">
+        <div>
+          <h3>Overlaps</h3>
+          <SlotsPreview
+            slots={findAllIntersections(event.attendees)}
+          ></SlotsPreview>
+        </div>
+        {/* <div className="flex-grow">
           <h3 className="font-bold">Slots</h3>
           <SlotsPreview slots={event.slots} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

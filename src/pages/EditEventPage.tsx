@@ -22,7 +22,7 @@ const EditEventPage: React.FC = () => {
   useEffect(() => {
     if (!id) {
       addToast({
-        title: "Cannot fetch event: no ID supplied",
+        title: "Unable to fetch event: no ID supplied",
         color: "danger",
       });
       return;
